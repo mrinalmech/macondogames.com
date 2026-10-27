@@ -32,10 +32,10 @@ export default function Home() {
               Press kit
             </Link>
             <Link
-              href="/about"
+              href="/contact"
               className="border border-steel/40 px-5 py-3 font-mono text-xs uppercase tracking-[0.22em] text-steel hover:border-foreground hover:text-foreground"
             >
-              The studio
+              Contact
             </Link>
           </div>
         </div>
