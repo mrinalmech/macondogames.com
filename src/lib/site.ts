@@ -18,4 +18,8 @@ export const navLinks = [
   { href: "/privacy", label: "Privacy" },
 ] as const;
 
+export const headerNavLinks = navLinks.filter(
+  (link) => link.href !== "/" && link.href !== "/privacy",
+);
+
 export type NavHref = (typeof navLinks)[number]["href"];

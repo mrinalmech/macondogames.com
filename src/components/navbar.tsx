@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { navLinks, site } from "@/lib/site";
+import { headerNavLinks, site } from "@/lib/site";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -36,11 +36,8 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex" aria-label="Primary">
-          {navLinks.map((link) => {
-            const active =
-              link.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(link.href);
+          {headerNavLinks.map((link) => {
+            const active = pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
@@ -86,11 +83,8 @@ export function Navbar() {
           aria-label="Mobile"
         >
           <ul className="flex flex-col gap-1">
-            {navLinks.map((link) => {
-              const active =
-                link.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(link.href);
+            {headerNavLinks.map((link) => {
+              const active = pathname.startsWith(link.href);
               return (
                 <li key={link.href}>
                   <Link
