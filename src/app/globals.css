@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --background: #07090d;
+  --foreground: #e8eef4;
+  --void: #07090d;
+  --panel: #10151d;
+  --steel: #8ea0b3;
+  --signal: #4de8e0;
+  --ember: #ff6a3d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-void: var(--void);
+  --color-panel: var(--panel);
+  --color-steel: var(--steel);
+  --color-signal: var(--signal);
+  --color-ember: var(--ember);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-orbitron);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--background);
+  background-image:
+    linear-gradient(rgba(77, 232, 224, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77, 232, 224, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    1200px 600px at 80% -10%,
+    rgba(77, 232, 224, 0.08),
+    transparent 55%
+  );
+  z-index: 0;
+}
+
+#app-root {
+  position: relative;
+  z-index: 1;
+}
