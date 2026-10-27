@@ -5,8 +5,10 @@ export const site = {
   featuredGame: {
     title: "Global Steel",
     status: "In development",
+    tagline: "SUIT UP. SHOOT 'EM UP. LEVEL UP.",
     logline:
-      "A tactical indie title set in a fractured industrial future — placeholder copy until the public reveal.",
+      "A 2D run-and-gun inspired by Saturday-morning cartoons of the 80s.",
+    steamUrl: "https://store.steampowered.com/app/1073970/Global_Steel/",
   },
 } as const;
 
