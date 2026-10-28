@@ -1,41 +1,98 @@
-import Link from "next/link";
-import { navLinks, site } from "@/lib/site";
+"use client";
 
-export function Footer() {
+import { config } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faDiscord,
+  faFacebookF,
+  faInstagram,
+  faTwitch,
+  faXTwitter,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
+import { navLinks } from "@/lib/site";
+import styles from "./footer.module.scss";
+
+config.autoAddCss = false;
+
+const socialLinks = [
+  { href: "https://x.com/macondogames_in", label: "X", icon: faXTwitter },
+  {
+    href: "https://www.facebook.com/macondostudios",
+    label: "Facebook",
+    icon: faFacebookF,
+  },
+  {
+    href: "https://www.instagram.com/macondogames_in",
+    label: "Instagram",
+    icon: faInstagram,
+  },
+  {
+    href: "https://www.youtube.com/channel/UCfYKziK0Ll8UZ9AiMTZT9DA",
+    label: "YouTube",
+    icon: faYoutube,
+  },
+  { href: "https://discord.gg/qVBvuy7Ny3", label: "Discord", icon: faDiscord },
+  {
+    href: "https://www.twitch.tv/macondogames",
+    label: "Twitch",
+    icon: faTwitch,
+  },
+];
+
+function isCurrentPage(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+}
+
+export function Footer({ year }: { year: ReactNode }) {
+  const pathname = usePathname();
+
   return (
-    <footer className="mt-auto border-t border-signal/20 bg-void">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1.4fr_1fr]">
-        <div>
-          <p className="font-display text-sm tracking-[0.28em] text-signal">
-            {site.name}
-          </p>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-steel">
-            {site.tagline} Currently building{" "}
-            <span className="text-foreground">{site.featuredGame.title}</span>.
-          </p>
-        </div>
-        <nav aria-label="Footer">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-ember">
-            Navigate
-          </p>
-          <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="font-mono text-xs uppercase tracking-[0.18em] text-steel hover:text-signal"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+    <footer className={`${styles.footer} mt-auto`}>
+      <div className={`${styles.group} edge-links`}>
+        <nav aria-label="Footer" className="flex items-center justify-center gap-1">
+          {navLinks.map((link) => {
+            const active = isCurrentPage(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="vcr-nav-link"
+                aria-current={active ? "page" : undefined}
+              >
+                <span className="vcr-nav-label">{link.label}</span>
+              </Link>
+            );
+          })}
         </nav>
-      </div>
-      <div className="border-t border-signal/10">
-        <p className="mx-auto max-w-6xl px-4 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-steel/80 sm:px-6">
-          © {site.name} · Placeholder site · GDPR notices live on Privacy
-        </p>
+        <ul className={styles.social}>
+          {socialLinks.map(({ href, label, icon }) => (
+            <li key={href}>
+              <a
+                aria-label={label}
+                className="vcr-icon-link"
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="vcr-icon-mark">
+                  <span className="vcr-icon-ghost vcr-icon-chroma" aria-hidden="true">
+                    <FontAwesomeIcon icon={icon} />
+                  </span>
+                  <span className="vcr-icon-ghost vcr-icon-signal" aria-hidden="true">
+                    <FontAwesomeIcon icon={icon} />
+                  </span>
+                  <FontAwesomeIcon className="vcr-icon-face" icon={icon} />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p className={styles.copy}>Copyright © {year} | Macondo Games Pvt. Ltd.</p>
       </div>
     </footer>
   );

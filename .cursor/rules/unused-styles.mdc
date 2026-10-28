@@ -1,0 +1,17 @@
+---
+description: Remove unused fonts, colors, and style rules while editing styles
+alwaysApply: true
+---
+
+# Unused styles
+
+When you add, change, or remove styles, fonts, or theme tokens, also remove the unused ones in the same change. Do this without being asked. Leave styles alone on a task that does not touch them.
+
+Search components, layout, and stylesheets for real references. Remove what nothing uses:
+
+- `next/font` loads and the CSS variables they set
+- color and font tokens, Sass variables, and `@theme` entries
+- rules, keyframes, mixins, functions, partials, and CSS-module classes
+- a stylesheet nothing imports
+
+A token that is still read stays, including a custom property used only from a module or a raw property. A word in site copy is not a use. Leave Tailwind's own default theme in place.

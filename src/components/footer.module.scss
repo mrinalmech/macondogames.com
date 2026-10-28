@@ -1,0 +1,39 @@
+.footer {
+  background: #000;
+  clip-path: polygon(0 var(--bar-tilt), 100% 0, 100% 100%, 0 100%);
+  padding-top: calc(var(--bar-tilt) / 2 + var(--edge-gap));
+  padding-bottom: 1.75rem;
+}
+
+.group {
+  width: fit-content;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.year {
+  display: inline-block;
+  min-width: 4ch;
+}
+
+.copy {
+  margin: 2rem 0 0;
+  font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--nav-rest);
+  text-align: center;
+}
