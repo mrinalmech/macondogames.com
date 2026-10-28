@@ -1,0 +1,21 @@
+.logo {
+  height: 70px;
+  width: auto;
+}
+
+.bar {
+  position: relative;
+}
+
+.barFill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #000;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--bar-tilt)), 0 100%);
+  pointer-events: none;
+}
+
+.barOpen {
+  clip-path: none;
+}
