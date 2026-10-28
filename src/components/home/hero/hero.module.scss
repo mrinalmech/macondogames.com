@@ -1,0 +1,217 @@
+@use "sass:math";
+
+$frames: 48;
+$fps: 24;
+$duration: math.div($frames, $fps) * 1s;
+
+.shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: logo-shine $duration infinite;
+}
+
+@keyframes logo-shine {
+  0% {
+    opacity: 1;
+    animation-timing-function: step-end;
+  }
+
+  #{math.percentage(math.div(1, $frames))} {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// Opening measured on the 3406×597 monitor. The box covers the clear
+// pixels and the one-pixel soft edge so the frame blends onto the picture.
+.monitor {
+  position: absolute;
+  bottom: 133px;
+  left: round(nearest, 50%, 1px);
+  z-index: 40;
+  // Half of 3406px, and 19% of 597px snapped to a whole pixel so the
+  // screenshots are not resampled.
+  translate: -1703px 113px;
+}
+
+.screen {
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  left: 1395px;
+  top: 61px;
+  width: 617px;
+  height: 278px;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  // Glass sheen rolling down the tube.
+  &::before {
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(255, 255, 255, 0.14) 46%,
+      transparent 54%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 45%;
+    animation: crt-sweep 8s linear infinite;
+  }
+
+  // Scanlines, phosphor grille, and the darkened tube edges.
+  &::after {
+    z-index: 2;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.28) 0 1px,
+        transparent 1px 3px
+      ),
+      repeating-linear-gradient(
+        to right,
+        rgba(255, 40, 40, 0.07) 0 1px,
+        rgba(40, 255, 80, 0.05) 1px 2px,
+        rgba(40, 80, 255, 0.07) 2px 3px
+      ),
+      radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.5) 100%);
+    box-shadow:
+      inset 0 0 18px rgba(0, 0, 0, 0.45),
+      inset 3px 0 0 rgba(255, 40, 80, 0.18),
+      inset -3px 0 0 rgba(40, 220, 255, 0.16);
+    animation: crt-flicker 0.15s steps(2, end) infinite;
+  }
+}
+
+$shots: 5;
+$hold: 5s;
+$fade: 0.8s;
+$total: $shots * $hold;
+
+.shot {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: auto;
+  height: auto;
+  max-width: none;
+  opacity: 0;
+  animation: screen-slideshow $total infinite;
+}
+
+@for $i from 1 through $shots {
+  .shot:nth-child(#{$i}) {
+    animation-delay: ($i - 1) * $hold - $total;
+  }
+}
+
+@keyframes screen-slideshow {
+  0% {
+    opacity: 1;
+  }
+
+  #{math.percentage(math.div($hold - $fade, $total))} {
+    opacity: 1;
+  }
+
+  #{math.percentage(math.div($hold, $total))} {
+    opacity: 0;
+  }
+
+  #{math.percentage(math.div($total - $fade, $total))} {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes crt-sweep {
+  0% {
+    background-position: 0 -50%;
+  }
+
+  100% {
+    background-position: 0 160%;
+  }
+}
+
+@keyframes crt-flicker {
+  0% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine {
+    display: none;
+  }
+
+  .shot {
+    animation: none;
+    opacity: 0;
+  }
+
+  .shot:first-child {
+    opacity: 1;
+  }
+
+  .screen::before,
+  .screen::after {
+    animation: none;
+  }
+}
+
+.caption {
+  position: absolute;
+  z-index: 50;
+  bottom: 18.25px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 2.625rem;
+  translate: -50% 0;
+  font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: var(--nav-rest);
+  -webkit-font-smoothing: none;
+}
+
+.pitch,
+.blurb {
+  margin: 0;
+}
+
+.pitch {
+  font-size: 30px;
+}
+
+.blurb {
+  font-size: 21px;
+  line-height: 1.15;
+}

@@ -1,5 +1,14 @@
 @use "sass:list";
+@use "sass:math";
 @use "tokens" as *;
+
+// The Global Steel highlight crosses the wordmark in 16 frames at 24fps.
+// This glint is the 42%–58% band of a rect traveling from -120% to 120%,
+// so it overlaps the mark only from -58% to 58%.
+$shine-cross: math.div(16, 24) * 1s;
+$shine-sweep: $shine-cross * math.div(240, 116);
+$shine-loop: 2s;
+$shine-sweep-stop: math.percentage(math.div($shine-sweep, $shine-loop));
 
 $vcr-lock-frames: (
   0%: (0, 0),
@@ -173,7 +182,12 @@ $vcr-lock-frames: (
 
   &:hover .vcr-logo-shine,
   &:focus-visible .vcr-logo-shine {
-    animation: vcr-chrome 2.25s linear infinite;
+    animation: vcr-chrome $shine-loop linear infinite;
+  }
+
+  &:hover .vcr-logo-mark,
+  &:focus-visible .vcr-logo-mark {
+    @include vcr-lock-once;
   }
 
   &:focus-visible {
@@ -258,7 +272,7 @@ $vcr-lock-frames: (
     transform: translateX(-120%) skewX(-18deg);
   }
 
-  88.89% {
+  #{$shine-sweep-stop} {
     transform: translateX(120%) skewX(-18deg);
   }
 
