@@ -4,11 +4,6 @@ export const site = {
   tagline: "Independent studio. Worlds of steel, signal, and story.",
   featuredGame: {
     title: "Global Steel",
-    status: "In development",
-    tagline: "SUIT UP. SHOOT 'EM UP. LEVEL UP.",
-    logline:
-      "A 2D run-and-gun inspired by Saturday-morning cartoons of the 80s.",
-    steamUrl: "https://store.steampowered.com/app/1073970/Global_Steel/",
   },
 } as const;
 

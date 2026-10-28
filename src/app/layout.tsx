@@ -3,7 +3,6 @@ import { Geist, Geist_Mono, Orbitron, VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
-import { RetroBackdrop } from "@/components/retro-backdrop";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -33,18 +32,17 @@ export const metadata: Metadata = {
     default: site.name,
     template: `%s | ${site.name}`,
   },
-  description: `${site.tagline} Home of ${site.featuredGame.title}.`,
+  description: site.tagline,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${vcr.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${vcr.variable} antialiased`}
     >
-      <body className="min-h-full">
-        <RetroBackdrop />
-        <div id="app-root" className="flex min-h-full flex-col">
+      <body className="min-h-dvh">
+        <div id="app-root" className="flex min-h-dvh flex-col">
           <a
             href="#content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-panel focus:px-3 focus:py-2 focus:text-signal"
