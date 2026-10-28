@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Orbitron } from "next/font/google";
+import { Geist, Geist_Mono, Orbitron, VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
@@ -21,6 +21,12 @@ const orbitron = Orbitron({
   subsets: ["latin"],
 });
 
+const vcr = VT323({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-vt323",
+});
+
 export const metadata: Metadata = {
   title: {
     default: site.name,
@@ -33,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${vcr.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <div id="app-root" className="flex min-h-full flex-col">
