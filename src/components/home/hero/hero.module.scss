@@ -16,7 +16,6 @@ $duration: math.div($frames, $fps) * 1s;
   width: 100%;
   height: 100%;
   opacity: 0;
-  animation: logo-shine $duration infinite;
 }
 
 @keyframes logo-shine {
@@ -36,14 +35,27 @@ $duration: math.div($frames, $fps) * 1s;
 
 // Opening measured on the 3406×597 monitor. The box covers the clear
 // pixels and the one-pixel soft edge so the frame blends onto the picture.
+// The screen is centered, so scaling from the bottom center keeps the
+// shots in the opening. Wings may clip. Scaling starts before the screen
+// reaches the window so a strip of the frame stays visible.
 .monitor {
   position: absolute;
-  bottom: 133px;
+  bottom: var(--monitor-bottom);
   left: round(nearest, 50%, 1px);
   z-index: 40;
-  // Half of 3406px, and 19% of 597px snapped to a whole pixel so the
-  // screenshots are not resampled.
-  translate: -1703px 113px;
+  width: 3406px;
+  transform-origin: center bottom;
+  translate: -1703px 0;
+  scale: var(--scale);
+}
+
+.bezel {
+  position: relative;
+  z-index: 10;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
 }
 
 .screen {
@@ -115,7 +127,12 @@ $total: $shots * $hold;
   height: auto;
   max-width: none;
   opacity: 0;
-  animation: screen-slideshow $total infinite;
+}
+
+// The first picture is on screen while the console fades in. The reel
+// itself starts only after the logo and caption have faded in.
+.shot:first-child {
+  opacity: 1;
 }
 
 @for $i from 1 through $shots {
@@ -166,13 +183,161 @@ $total: $shots * $hold;
   }
 }
 
+$intro: 0.8s;
+
+// The screen is 618px wide; scaling starts at 810px so ~96px of frame remains
+// on each side. Below 916px the walls shrink with the width, and the monitor
+// lifts so their bottoms stay behind it.
+// From about 1700px of width down, the section overrides 100dvh and shortens
+// with the width, so the cave stays close to the monitor.
+// A short wide window still floors at 800px so the wordmark stays clear.
+.hero {
+  position: relative;
+  overflow: hidden;
+  container-type: size;
+  --scale: min(1, calc(100cqw / 810px));
+  --l2: min(458px, 50cqw);
+  --wall-h: calc(var(--l2) * 676 / 458);
+  --tuck: 110px;
+  --monitor-bottom: max(
+    20px,
+    calc(100cqh - var(--wall-h) + var(--tuck) - 597px * var(--scale))
+  );
+  // The belly of the cave, plus the narrow arch the letters actually sit in
+  // while the walls are still full size (about 916–1100px).
+  --logo-cap: min(
+    525px,
+    calc(100cqw - var(--l2) * 0.917 - 56px),
+    calc((100cqw - 686px) * 1.267 + 2.2 * max(0px, 916px - 100cqw))
+  );
+  // Once the walls meet, drop the wordmark so the gap under the arch
+  // matches the gap above the console. 0 above 980px, about 12px at 916px.
+  --formed: min(1, max(0, calc((980px - 100cqw) / 64px)));
+  --drop: calc(
+    var(--formed) * max(0px, 12px - 0.0125 * max(0px, 916px - 100cqw))
+  );
+  // 180px of air around the letters on a wide screen, down to 80px by 1200px.
+  // The floor keeps the letters 24px clear of the console.
+  --pad: max(
+    calc(24px + 56px * var(--scale)),
+    calc(80px + 0.2 * (100cqw - 1200px))
+  );
+  --section-h: calc(
+    var(--logo-cap) * 0.3125 + var(--pad) * 2 + 535px * var(--scale) + 20px
+  );
+  height: min(100dvh, var(--section-h));
+  min-height: min(800px, var(--section-h));
+  --logo-w: min(
+    var(--logo-cap),
+    calc(
+      (50cqh - var(--monitor-bottom) / 2 - 323.5px * var(--scale) - 16px) /
+        0.15625
+    )
+  );
+  --type: min(var(--scale), calc((100cqw - 32px) / 685px));
+}
+
+.shade {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  width: 748px;
+  max-width: none;
+  height: auto;
+  translate: -50% 0;
+}
+
+.l1,
+.l2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-width: none;
+}
+
+.l2 {
+  z-index: 10;
+  width: var(--l2);
+}
+
+.l1 {
+  z-index: 20;
+  width: min(367px, calc(50cqw * 367 / 458));
+}
+
+.flip {
+  left: auto;
+  right: 0;
+  scale: -1 1;
+}
+
+// Both groups stay hidden until every hero image has loaded.
+.hero {
+  &[data-intro="scene"],
+  &[data-intro="copy"],
+  &[data-intro="play"] {
+    .scene {
+      opacity: 1;
+      transition: opacity $intro ease;
+    }
+  }
+
+  &[data-intro="copy"],
+  &[data-intro="play"] {
+    .copy {
+      opacity: 1;
+      transition: opacity $intro ease;
+    }
+  }
+
+  &[data-intro="play"] {
+    // Longhands so the per-frame and per-slide delays stay intact.
+    .frame {
+      animation-name: logo-shine;
+      animation-duration: $duration;
+      animation-iteration-count: infinite;
+    }
+
+    .shot {
+      animation-name: screen-slideshow;
+      animation-duration: $total;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+.scene,
+.copy {
+  opacity: 0;
+}
+
+@media (scripting: none) {
+  .scene,
+  .copy {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shine {
     display: none;
   }
 
-  .shot {
+  .hero .scene,
+  .hero .copy {
+    transition: none;
+  }
+
+  .frame,
+  .hero[data-intro="play"] .frame,
+  .shot,
+  .hero[data-intro="play"] .shot {
     animation: none;
+  }
+
+  .shot {
     opacity: 0;
   }
 
@@ -186,19 +351,37 @@ $total: $shots * $hold;
   }
 }
 
+// Letters sit halfway between the hero top and the screen opening.
+// At full size the opening is 555px above the bottom and the center inset is 141.5px.
+// --drop lowers them once the cave has closed so the gaps above and below match.
+.wordmark {
+  position: absolute;
+  top: calc(
+    (100% - var(--monitor-bottom) - 535px * var(--scale)) / 2 - 141.5px *
+      (var(--logo-w) / 525px) + var(--drop)
+  );
+  left: 50%;
+  z-index: 30;
+  width: var(--logo-w);
+  translate: -50% 0;
+}
+
 .caption {
   position: absolute;
   z-index: 50;
-  bottom: 18.25px;
+  bottom: calc(var(--monitor-bottom) + 56px * var(--scale) - 10px);
   left: 50%;
   display: flex;
   align-items: center;
-  gap: 2.625rem;
-  translate: -50% 0;
+  width: max-content;
+  max-width: calc(100cqw - 32px);
+  gap: calc(42px * var(--type));
+  translate: -50% 50%;
   font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
   letter-spacing: 0.02em;
   line-height: 1.05;
   color: var(--nav-rest);
+  white-space: nowrap;
   -webkit-font-smoothing: none;
 }
 
@@ -208,10 +391,10 @@ $total: $shots * $hold;
 }
 
 .pitch {
-  font-size: 30px;
+  font-size: calc(30px * var(--type));
 }
 
 .blurb {
-  font-size: 21px;
+  font-size: calc(21px * var(--type));
   line-height: 1.15;
 }
