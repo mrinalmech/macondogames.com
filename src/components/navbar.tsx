@@ -42,13 +42,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-2 font-mono text-[11px] uppercase tracking-[0.22em] transition-colors ${
-                  active
-                    ? "text-signal"
-                    : "text-steel hover:text-foreground"
-                }`}
+                className="vcr-nav-link"
+                aria-current={active ? "page" : undefined}
               >
-                {link.label}
+                <span className="vcr-nav-label">{link.label}</span>
               </Link>
             );
           })}
@@ -89,13 +86,10 @@ export function Navbar() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block border border-transparent px-3 py-3 font-mono text-xs uppercase tracking-[0.24em] ${
-                      active
-                        ? "border-signal/40 bg-panel text-signal"
-                        : "text-steel hover:border-signal/20 hover:text-foreground"
-                    }`}
+                    className="vcr-nav-link min-h-11 w-full"
+                    aria-current={active ? "page" : undefined}
                   >
-                    {link.label}
+                    <span className="vcr-nav-label">{link.label}</span>
                   </Link>
                 </li>
               );
