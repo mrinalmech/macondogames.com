@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Orbitron, VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
+import { RetroBackdrop } from "@/components/retro-backdrop";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${vcr.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <RetroBackdrop />
         <div id="app-root" className="flex min-h-full flex-col">
           <a
             href="#content"
