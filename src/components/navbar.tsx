@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { headerNavLinks, site } from "@/lib/site";
+import styles from "./navbar.module.scss";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -21,8 +22,8 @@ export function Navbar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-signal/20 bg-void/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-50 bg-black">
+      <div className="flex h-16 w-full items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
           className="group flex items-center gap-3 tracking-[0.28em]"
@@ -53,21 +54,21 @@ export function Navbar() {
 
         <button
           type="button"
-          className="grid h-10 w-10 place-items-center border border-signal/30 text-signal md:hidden"
+          className={`${styles.button} grid h-10 w-10 place-items-center md:hidden`}
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
         >
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-          <span className="flex flex-col gap-1.5" aria-hidden>
+          <span className="relative block h-[15px] w-5" aria-hidden>
             <span
-              className={`block h-px w-5 bg-current transition ${open ? "translate-y-[5px] rotate-45" : ""}`}
+              className={`absolute left-0 top-0 block h-px w-5 origin-center bg-current transition ${open ? "translate-y-[7px] rotate-45" : ""}`}
             />
             <span
-              className={`block h-px w-5 bg-current transition ${open ? "opacity-0" : ""}`}
+              className={`absolute left-0 top-[7px] block h-px w-5 bg-current transition ${open ? "opacity-0" : ""}`}
             />
             <span
-              className={`block h-px w-5 bg-current transition ${open ? "-translate-y-[5px] -rotate-45" : ""}`}
+              className={`absolute left-0 top-[14px] block h-px w-5 origin-center bg-current transition ${open ? "-translate-y-[7px] -rotate-45" : ""}`}
             />
           </span>
         </button>
@@ -76,7 +77,7 @@ export function Navbar() {
       {open ? (
         <nav
           id="mobile-nav"
-          className="border-t border-signal/20 bg-void px-4 py-4 md:hidden"
+          className="bg-black px-4 py-4 md:hidden"
           aria-label="Mobile"
         >
           <ul className="flex flex-col gap-1">

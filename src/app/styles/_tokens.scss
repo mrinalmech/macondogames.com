@@ -1,0 +1,25 @@
+@use "sass:color";
+@use "sass:map";
+
+$colors: (
+  "background": #6b21a8,
+  "foreground": #e8eef4,
+  "panel": #10151d,
+  "signal": #4de8e0,
+  "volt": #f5e663,
+);
+
+$fonts: (
+  "sans": var(--font-geist-sans),
+  "display": var(--font-orbitron),
+  "vcr": var(--font-vt323),
+);
+
+$nav-rest: #d7f6ef;
+$nav-hover: #f6fffb;
+$chroma: #ff3cac;
+$signal: map.get($colors, "signal");
+
+@function glow($color, $alpha) {
+  @return color.change($color, $alpha: $alpha);
+}

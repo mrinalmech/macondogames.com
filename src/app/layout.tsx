@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Orbitron, VT323 } from "next/font/google";
+import { Geist, Orbitron, VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
@@ -8,11 +8,6 @@ import "./globals.scss";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -39,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${vcr.variable} antialiased`}
+      className={`${geistSans.variable} ${orbitron.variable} ${vcr.variable} antialiased`}
     >
       <body className="min-h-dvh">
         <div id="app-root" className="flex min-h-dvh flex-col">
@@ -51,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           <Suspense
             fallback={
-              <div className="h-16 border-b border-signal/20 bg-void/80" />
+              <div className="h-16 bg-black" />
             }
           >
             <Navbar />

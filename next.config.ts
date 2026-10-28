@@ -1,34 +1,39 @@
 import type { NextConfig } from "next";
 
+const sassLoader = {
+  loader: "sass-loader",
+  options: {
+    sassOptions: {
+      // Compressed output turns `@import "..."` into `@import"..."`
+      // which Tailwind does not treat as an import.
+      style: "expanded",
+    },
+  },
+};
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {
-    // Sass is compiled by the loader below so it finishes before Tailwind.
+    // Sass is compiled by the loaders below so it finishes before Tailwind.
     turbopackUseBuiltinSass: false,
   },
   turbopack: {
     rules: {
       "*.css": {
+        // *.css also matches *.module.css. Leave those to the module rule.
+        condition: { not: { path: /\.module\.css$/ } },
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
       // Loaders run right to left: Sass first, then Tailwind.
-      "*.scss": {
-        loaders: [
-          "@tailwindcss/turbopack",
-          {
-            loader: "sass-loader",
-            options: {
-              sassOptions: {
-                // Compressed output turns `@import "..."` into `@import"..."`
-                // which Tailwind does not treat as an import.
-                style: "expanded",
-              },
-            },
-          },
-        ],
+      "**/globals.scss": {
+        loaders: ["@tailwindcss/turbopack", sassLoader],
         as: "*.css",
+      },
+      "**/*.module.scss": {
+        loaders: [sassLoader],
+        as: "*.module.css",
       },
     },
   },
