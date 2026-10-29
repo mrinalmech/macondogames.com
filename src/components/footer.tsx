@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { navLinks } from "@/lib/site";
+import { isCurrentPage, navLinks } from "@/lib/site";
 import styles from "./footer.module.scss";
 
 config.autoAddCss = false;
@@ -42,11 +42,6 @@ const socialLinks = [
     icon: faTwitch,
   },
 ];
-
-function isCurrentPage(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname.startsWith(href);
-}
 
 export function Footer({ year }: { year: ReactNode }) {
   const pathname = usePathname();

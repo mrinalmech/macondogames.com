@@ -1,17 +1,9 @@
-@use "sass:math";
+@use "motion" as *;
 
 // Same treatment as macondogames.com: a 190px frame and a 168px card
 // placeholder. The page sets color-scheme: dark, which paints this
 // iframe's transparent canvas white, so the frame opts back out.
-//
-// The glint matches the MG mark. The Global Steel highlight crosses the
-// wordmark in 16 frames at 24fps. This band is the 42%–58% slice of a
-// rect traveling from -120% to 120%, so it overlaps the card for that
-// same span, inside the same 2s loop.
-$shine-cross: math.div(16, 24) * 1s;
-$shine-sweep: $shine-cross * math.div(240, 116);
-$shine-loop: 2s;
-$shine-sweep-stop: math.percentage(math.div($shine-sweep, $shine-loop));
+// The glint uses the shared shine timing.
 .slot {
   position: relative;
   width: 100%;
@@ -46,7 +38,7 @@ $shine-sweep-stop: math.percentage(math.div($shine-sweep, $shine-loop));
       rgb(255 255 255 / 0%) 100%
     );
     transform-origin: center;
-    transform: translateX(-120%) skewX(-18deg);
+    transform: $shine-from;
     animation: steam-chrome $shine-loop linear infinite;
   }
 }
@@ -81,19 +73,7 @@ $shine-sweep-stop: math.percentage(math.div($shine-sweep, $shine-loop));
   display: none;
 }
 
-@keyframes steam-chrome {
-  0% {
-    transform: translateX(-120%) skewX(-18deg);
-  }
-
-  #{$shine-sweep-stop} {
-    transform: translateX(120%) skewX(-18deg);
-  }
-
-  100% {
-    transform: translateX(120%) skewX(-18deg);
-  }
-}
+@include shine-keyframes(steam-chrome);
 
 @media screen and (max-width: 420px) {
   .slot {

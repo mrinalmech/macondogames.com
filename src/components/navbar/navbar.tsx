@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { headerNavLinks, site } from "@/lib/site";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { headerNavLinks, isCurrentPage, site } from "@/lib/site";
 import logo from "./logo.png";
 import styles from "./navbar.module.scss";
 
@@ -27,18 +27,58 @@ function MenuGlyph({ open }: { open: boolean }) {
 }
 
 const barFadeDistance = 80;
+// Gap between the M and the G, as a fraction of the logo image width.
+const logoGap = 74.5 / 137;
+// Where the open panel's left edge meets the bottom of the screen.
+const menuFoot = 0.2;
+
+function NavLink({
+  href,
+  label,
+  pathname,
+}: {
+  href: (typeof headerNavLinks)[number]["href"];
+  label: string;
+  pathname: string;
+}) {
+  const active = isCurrentPage(pathname, href);
+
+  return (
+    <Link
+      href={href}
+      className="vcr-nav-link"
+      aria-current={active ? "page" : undefined}
+    >
+      <span className="vcr-nav-label">{label}</span>
+    </Link>
+  );
+}
 
 export function Navbar() {
   const pathname = usePathname();
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [fill, setFill] = useState(0);
+  const [menuPath, setMenuPath] = useState(pathname);
+
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    setOpen(false);
+  }
 
   useLayoutEffect(() => {
+    const fill = fillRef.current;
+    if (!fill) return;
+
     let frame = 0;
+    let current = Number.NaN;
 
     const apply = () => {
       const next = Math.min(1, window.scrollY / barFadeDistance);
-      setFill((current) => (Math.abs(current - next) < 0.001 ? current : next));
+      if (Math.abs(current - next) < 0.001) return;
+      current = next;
+      fill.style.setProperty("--bar-fill", String(next));
     };
 
     const onScroll = () => {
@@ -58,27 +98,97 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    const navDesktop = getComputedStyle(document.documentElement)
+      .getPropertyValue("--nav-desktop")
+      .trim();
+    const desktop = window.matchMedia(`(min-width: ${navDesktop})`);
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
 
-  useEffect(() => {
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
+  useLayoutEffect(() => {
+    const logo = logoRef.current;
+    const nav = navRef.current;
+    if (!logo || !nav) return;
+
+    const apply = () => {
+      const logoRect = logo.getBoundingClientRect();
+      const navRect = nav.getBoundingClientRect();
+      if (logoRect.width === 0 || navRect.width === 0) return;
+
+      const cutX = logoRect.left - navRect.left + logoRect.width * logoGap;
+      const cutY = logoRect.top - navRect.top + logoRect.height / 2;
+      const footX = navRect.width * menuFoot;
+      const footY = navRect.height;
+      const dx = footX - cutX;
+      const dy = footY - cutY;
+      const topX = cutX + ((0 - cutY) / dy) * dx;
+
+      nav.style.setProperty("--menu-cut-x", `${cutX}px`);
+      nav.style.setProperty("--menu-cut-y", `${cutY}px`);
+      nav.style.setProperty("--menu-foot-x", `${footX}px`);
+      nav.style.setProperty("--menu-top-x", `${topX}px`);
+      nav.style.setProperty(
+        "--menu-angle",
+        `${(Math.atan2(dx, dy) * 180) / Math.PI}deg`,
+      );
+      nav.style.setProperty(
+        "--menu-link-shift",
+        `${logoRect.height / 2 + 28}px`,
+      );
+    };
+
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(logo);
+    observer.observe(nav);
+    window.addEventListener("resize", apply);
+    window.visualViewport?.addEventListener("resize", apply);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", apply);
+      window.visualViewport?.removeEventListener("resize", apply);
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    // The hero sizes from its container width. Hiding the scrollbar widens
+    // that box, so replace the bar with the same amount of padding.
+    const gap = open ? window.innerWidth - document.documentElement.clientWidth : 0;
     document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.paddingRight = gap > 0 ? `${gap}px` : "";
+
+    const blocked = [
+      document.getElementById("content"),
+      document.querySelector("footer"),
+      document.querySelector<HTMLElement>('a[href="#content"]'),
+    ];
+
+    for (const node of blocked) {
+      if (node) node.inert = open;
+    }
+
     return () => {
       document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      for (const node of blocked) {
+        if (node) node.inert = false;
+      }
     };
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50">
+    <header className="sticky top-0 z-[70]">
       <div
         className={`${styles.bar} flex w-full items-center justify-between pb-3 pl-7 pr-4 pt-5 sm:pr-6`}
+        data-open={open ? "" : undefined}
       >
-        <div
-          className={`${styles.barFill} ${open ? styles.barOpen : ""}`}
-          style={{ opacity: open ? 1 : fill }}
-          aria-hidden
-        />
-        <Link href="/" className="vcr-logo-link -translate-y-1">
+        <div ref={fillRef} className={styles.barFill} aria-hidden />
+        <Link ref={logoRef} href="/" className="vcr-logo-link -translate-y-1">
           <span className="vcr-logo-mark">
             <Image
               src={logo}
@@ -140,19 +250,9 @@ export function Navbar() {
           className="edge-links hidden items-center gap-1 self-start md:flex"
           aria-label="Primary"
         >
-          {headerNavLinks.map((link) => {
-            const active = pathname.startsWith(link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="vcr-nav-link"
-                aria-current={active ? "page" : undefined}
-              >
-                <span className="vcr-nav-label">{link.label}</span>
-              </Link>
-            );
-          })}
+          {headerNavLinks.map((link) => (
+            <NavLink key={link.href} pathname={pathname} {...link} />
+          ))}
         </nav>
 
         <button
@@ -177,30 +277,28 @@ export function Navbar() {
         </button>
       </div>
 
-      {open ? (
-        <nav
-          id="mobile-nav"
-          className="bg-black px-4 py-4 md:hidden"
-          aria-label="Mobile"
-        >
-          <ul className="flex flex-col gap-1">
-            {headerNavLinks.map((link) => {
-              const active = pathname.startsWith(link.href);
-              return (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="vcr-nav-link min-h-11 w-full"
-                    aria-current={active ? "page" : undefined}
-                  >
-                    <span className="vcr-nav-label">{link.label}</span>
-                  </Link>
-                </li>
-              );
-            })}
+      <div
+        className={`${styles.scrim} ${open ? styles.scrimOpen : ""}`}
+        aria-hidden
+      />
+      <nav
+        ref={navRef}
+        id="mobile-nav"
+        className={`${styles.mobileNav} ${open ? styles.mobileNavOpen : ""}`}
+        aria-label="Mobile"
+        aria-hidden={open ? undefined : true}
+        inert={open ? undefined : true}
+      >
+        <div className={styles.mobileSheet}>
+          <ul className={styles.mobileLinks}>
+            {headerNavLinks.map((link) => (
+              <li key={link.href}>
+                <NavLink pathname={pathname} {...link} />
+              </li>
+            ))}
           </ul>
-        </nav>
-      ) : null}
+        </div>
+      </nav>
     </header>
   );
 }

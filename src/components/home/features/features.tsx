@@ -1,4 +1,4 @@
-import { SteamWidget } from "./steam-widget";
+import { SteamWidget } from "./steam-widget/steam-widget";
 
 export function Features() {
   return (

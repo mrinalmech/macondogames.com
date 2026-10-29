@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { flushSync } from "react-dom";
 import { site } from "@/lib/site";
 import l1 from "./l1.png";
@@ -18,8 +18,6 @@ import wallshade from "./wallshade.png";
 import styles from "./hero.module.scss";
 
 const screenshots = [shot0, shot1, shot2, shot3, shot4];
-
-const frameDuration = 1 / 24;
 
 type Intro = "hold" | "scene" | "copy" | "play";
 
@@ -59,9 +57,19 @@ function whenFaded(element: HTMLElement) {
 export function Hero() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+  const phase = useRef<Intro>("hold");
   const [intro, setIntro] = useState<Intro>("hold");
 
+  function advance(next: Intro) {
+    phase.current = next;
+    setIntro(next);
+  }
+
   useEffect(() => {
+    // Home stays mounted, hidden, on other routes. This effect runs again
+    // when it is shown. A finished intro must not start over.
+    if (phase.current === "play") return;
+
     const scene = sceneRef.current;
     const copy = copyRef.current;
     if (!scene || !copy) return;
@@ -70,21 +78,29 @@ export function Hero() {
     const images = [...scene.querySelectorAll("img"), ...copy.querySelectorAll("img")];
 
     (async () => {
-      await Promise.all(images.map(whenImageReady));
-      if (cancelled) return;
+      if (phase.current === "hold") {
+        await Promise.all(images.map(whenImageReady));
+        if (cancelled) return;
+      }
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setIntro("copy");
+        if (phase.current !== "copy") flushSync(() => advance("copy"));
         return;
       }
 
-      flushSync(() => setIntro("scene"));
-      await whenFaded(scene);
-      if (cancelled) return;
-      flushSync(() => setIntro("copy"));
-      await whenFaded(copy);
-      if (cancelled) return;
-      setIntro("play");
+      if (phase.current === "hold") {
+        flushSync(() => advance("scene"));
+        await whenFaded(scene);
+        if (cancelled) return;
+      }
+
+      if (phase.current === "scene") {
+        flushSync(() => advance("copy"));
+        await whenFaded(copy);
+        if (cancelled) return;
+      }
+
+      if (phase.current === "copy") advance("play");
     })();
 
     return () => {
@@ -94,7 +110,7 @@ export function Hero() {
 
   return (
     <section
-      className={`${styles.hero} bg-linear-to-b from-[#000] to-[#1a0629]`}
+      className={`${styles.hero} bg-linear-to-b from-black to-(--background)`}
       data-intro={intro}
     >
       <div ref={sceneRef} className={styles.scene}>
@@ -106,7 +122,14 @@ export function Hero() {
         <div className={styles.monitor}>
           <div className={styles.screen} aria-hidden>
             {screenshots.map((shot) => (
-              <img key={shot.src} src={shot.src} alt="" className={styles.shot} />
+              <Image
+                key={shot.src}
+                src={shot}
+                alt=""
+                sizes="620px"
+                loading="eager"
+                className={styles.shot}
+              />
             ))}
           </div>
           <Image
@@ -128,12 +151,14 @@ export function Hero() {
           />
           <div className={styles.shine} aria-hidden>
             {logoShineFrames.map((frame, index) => (
-              <img
+              <Image
                 key={frame.src}
-                src={frame.src}
+                src={frame}
                 alt=""
+                sizes="525px"
+                loading="eager"
                 className={styles.frame}
-                style={{ animationDelay: `${index * frameDuration}s` }}
+                style={{ "--i": index } as CSSProperties}
               />
             ))}
           </div>
@@ -142,7 +167,7 @@ export function Hero() {
           <p className={styles.pitch}>
             SUIT UP.
             <br />
-            SHOOT 'EM UP.
+            SHOOT &apos;EM UP.
             <br />
             LEVEL UP.
           </p>

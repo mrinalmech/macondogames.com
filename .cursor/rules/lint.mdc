@@ -1,0 +1,15 @@
+---
+description: Code must pass lint with no errors or warnings
+alwaysApply: true
+---
+
+# Linting
+
+`npm run lint` must pass with no errors and no warnings. A change is not done while lint fails. Run it on the files you touched before finishing, and fix what it reports.
+
+Fix the code. Do not silence a rule with a disable comment unless the rule cannot see a real constraint, and then say why in the comment.
+
+```tsx
+// Escaping the apostrophe satisfies react/no-unescaped-entities.
+SHOOT &apos;EM UP.
+```

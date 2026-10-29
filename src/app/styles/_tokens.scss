@@ -17,6 +17,7 @@ $nav-rest: #d7f6ef;
 $nav-hover: #f6fffb;
 $chroma: #ff3cac;
 $signal: map.get($colors, "signal");
+$vcr-font: var(--font-vcr), "VT323", ui-monospace, monospace;
 
 @function glow($color, $alpha) {
   @return color.change($color, $alpha: $alpha);

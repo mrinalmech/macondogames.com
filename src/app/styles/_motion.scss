@@ -1,0 +1,37 @@
+@use "sass:math";
+
+$bar-tilt: 36px;
+$edge-gap: 15px;
+$fps: 24;
+$header-block: 102px;
+$nav-desktop: 48rem;
+
+$shine-from: translateX(-120%) skewX(-18deg);
+$shine-to: translateX(120%) skewX(-18deg);
+
+// The Global Steel highlight crosses the wordmark in 16 frames at $fps.
+// This glint is the 42%–58% band of a rect traveling from -120% to 120%,
+// so it overlaps the mark only from -58% to 58%.
+$_shine-frames: 16;
+$_shine-travel: 240;
+$_shine-overlap: 116;
+$shine-loop: 2s;
+$_shine-cross: math.div($_shine-frames, $fps) * 1s;
+$_shine-sweep: $_shine-cross * math.div($_shine-travel, $_shine-overlap);
+$shine-sweep-stop: math.percentage(math.div($_shine-sweep, $shine-loop));
+
+@mixin shine-keyframes($name) {
+  @keyframes #{$name} {
+    0% {
+      transform: $shine-from;
+    }
+
+    #{$shine-sweep-stop} {
+      transform: $shine-to;
+    }
+
+    100% {
+      transform: $shine-to;
+    }
+  }
+}

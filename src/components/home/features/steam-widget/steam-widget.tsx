@@ -1,23 +1,31 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import styles from "./steam-widget.module.scss";
 
 const widgetUrl = "https://store.steampowered.com/widget/1073970/";
+
+function subscribeToObserverSupport() {
+  return () => {};
+}
+
+function readObserverSupport() {
+  return "IntersectionObserver" in window;
+}
 
 export function SteamWidget() {
   const slotRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
+  const canDefer = useSyncExternalStore(
+    subscribeToObserverSupport,
+    readObserverSupport,
+    () => true,
+  );
 
   useEffect(() => {
     const slot = slotRef.current;
-    if (!slot) return;
-
-    if (!("IntersectionObserver" in window)) {
-      setActive(true);
-      return;
-    }
+    if (!slot || !("IntersectionObserver" in window)) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry?.isIntersecting) return;
@@ -29,14 +37,15 @@ export function SteamWidget() {
     return () => observer.disconnect();
   }, []);
 
+  const visible = active || !canDefer;
+
   return (
     <div
       ref={slotRef}
       className={styles.slot}
-      data-state={ready ? "ready" : active ? "loading" : "idle"}
     >
       <div className={ready ? `${styles.ghost} ${styles.ghostOut}` : styles.ghost} />
-      {active ? (
+      {visible ? (
         <iframe
           className={ready ? `${styles.frame} ${styles.frameIn}` : styles.frame}
           src={widgetUrl}

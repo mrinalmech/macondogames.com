@@ -1,3 +1,5 @@
+@use "tokens" as *;
+
 .footer {
   background: #000;
   clip-path: polygon(0 var(--bar-tilt), 100% 0, 100% 100%, 0 100%);
@@ -29,7 +31,7 @@
 
 .copy {
   margin: 2rem 0 0;
-  font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
+  font-family: $vcr-font;
   font-size: 18px;
   line-height: 1;
   letter-spacing: 0.02em;

@@ -1,4 +1,4 @@
-import { Features } from "@/components/home/features";
+import { Features } from "@/components/home/features/features";
 import { Hero } from "@/components/home/hero/hero";
 
 export default function Home() {

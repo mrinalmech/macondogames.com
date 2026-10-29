@@ -33,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${vcr.variable} antialiased`}
     >
       <body className="min-h-dvh">
-        <div id="app-root" className="flex min-h-dvh flex-col">
+        <div className="flex min-h-dvh flex-col">
           <a
             href="#content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-panel focus:px-3 focus:py-2 focus:text-signal"
@@ -42,12 +42,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           <Suspense
             fallback={
-              <div className="h-[102px]" />
+              <div className="h-(--header-block)" />
             }
           >
             <Navbar />
           </Suspense>
-          <div id="content" className="-mt-[102px] flex flex-1 flex-col">
+          <div id="content" className="-mt-(--header-block) flex flex-1 flex-col">
             {children}
           </div>
           <Footer
