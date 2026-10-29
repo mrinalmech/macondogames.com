@@ -187,8 +187,6 @@ $total: $shots * $hold;
   }
 }
 
-$intro: 0.8s;
-
 // The screen is 618px wide; scaling starts at 810px so ~96px of frame remains
 // on each side. Below 916px the walls shrink with the width, and the monitor
 // lifts so their bottoms stay behind it.
@@ -198,6 +196,7 @@ $intro: 0.8s;
 .hero {
   position: relative;
   overflow: hidden;
+  background-image: linear-gradient(to bottom, #000, var(--background));
   container-type: size;
   --scale: min(1, calc(100cqw / 810px));
   --l2: min(458px, 50cqw);
@@ -401,4 +400,37 @@ $intro: 0.8s;
 .blurb {
   font-size: calc(21px * var(--type));
   line-height: 1.15;
+}
+
+// Side by side, the blurb shrinks to about 10px. Stack it under the
+// pitch and leave room beneath the console so both stay readable.
+@media (max-width: 40rem) {
+  .hero {
+    height: calc(min(100dvh, var(--section-h)) + 200px);
+    min-height: calc(min(800px, var(--section-h)) + 200px);
+  }
+
+  .caption {
+    bottom: 24px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: calc(100cqw - 32px);
+    translate: -50% 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .pitch {
+    font-size: 22px;
+  }
+
+  .blurb {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .blurb br {
+    display: none;
+  }
 }

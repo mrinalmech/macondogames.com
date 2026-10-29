@@ -109,10 +109,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section
-      className={`${styles.hero} bg-linear-to-b from-black to-(--background)`}
-      data-intro={intro}
-    >
+    <section className={styles.hero} data-hero data-intro={intro}>
       <div ref={sceneRef} className={styles.scene}>
         <Image src={wallshade} alt="" priority className={styles.shade} />
         <Image src={l2} alt="" priority className={styles.l2} />
@@ -137,6 +134,7 @@ export function Hero() {
             alt=""
             priority
             unoptimized
+            data-bezel
             className={styles.bezel}
           />
         </div>
@@ -172,7 +170,7 @@ export function Hero() {
             LEVEL UP.
           </p>
           <p className={styles.blurb}>
-            Global Steel is a 2D run-and-gun video game inspired by
+            Global Steel is a 2D run-and-gun video game inspired by{" "}
             <br />
             Saturday-morning cartoons of the 80s.
           </p>

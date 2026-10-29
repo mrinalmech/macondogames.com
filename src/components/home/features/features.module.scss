@@ -1,7 +1,8 @@
+@use "motion" as *;
 @use "tokens" as *;
 
 .features {
-  padding: 5rem 1.5rem;
+  padding: 3rem 1.25rem 4rem;
 }
 
 .inner {
@@ -46,10 +47,87 @@
 }
 
 .heading {
+  position: relative;
   margin: 0 0 0.5rem;
-  font-size: 1.75rem;
+  font-family: var(--font-commando), sans-serif;
+  font-size: 2.925rem;
   font-weight: 400;
-  line-height: 1.1;
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fill,
+.shade,
+.lip,
+.sheen {
+  color: transparent;
+}
+
+.fill,
+.sheen {
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.fill {
+  position: relative;
+  background-image: linear-gradient(
+    180deg,
+    #589ecf 0%,
+    #8ec8ef 16%,
+    #b2e8f8 32%,
+    #dff9ff 48%,
+    #6eb4de 64%,
+    #3a82b0 80%,
+    #5aa3d2 100%
+  );
+}
+
+.depth,
+.shade,
+.lip,
+.sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.depth {
+  color: #1e5a86;
+  transform: translate(0.012em, 0.03em);
+}
+
+.shade {
+  -webkit-text-stroke: 0.02em #c5e8f8;
+  transform: translate(0.004em, 0.008em);
+}
+
+.lip {
+  -webkit-text-stroke: 0.01em #f7fdff;
+  transform: translate(-0.004em, -0.006em);
+}
+
+.sheen {
+  // The band sits in the middle of a 200% image. 0%–100% only slides that
+  // image from edge to edge, which parks the band on a title that fills the box.
+  background-image: linear-gradient(
+    108deg,
+    rgb(255 255 255 / 0%) 42%,
+    rgb(255 255 255 / 85%) 50%,
+    rgb(255 255 255 / 0%) 58%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  background-position: 130% 0;
+  animation: feature-shine $shine-loop linear infinite;
+}
+
+@keyframes feature-shine {
+  #{$shine-sweep-stop},
+  100% {
+    background-position: -30% 0;
+  }
 }
 
 .body {
@@ -85,14 +163,15 @@
   margin-inline: auto;
 }
 
-@media (min-width: 40rem) {
+@media (min-width: 48rem) {
+  .features {
+    padding: 5rem 1.5rem;
+  }
+
   .heading {
     margin-bottom: 1rem;
-    font-size: 2rem;
   }
-}
 
-@media (min-width: 48rem) {
   .widget {
     margin-bottom: 5rem;
   }
@@ -117,6 +196,13 @@
   }
 }
 
+// The long title fits one line only once each column is about 34rem.
+@media (min-width: 75rem) {
+  .heading {
+    font-size: 3.575rem;
+  }
+}
+
 @media (scripting: none) {
   .art[data-from] {
     opacity: 1;
@@ -129,5 +215,9 @@
     opacity: 1;
     translate: 0 0;
     transition: none;
+  }
+
+  .sheen {
+    animation: none;
   }
 }

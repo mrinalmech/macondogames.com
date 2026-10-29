@@ -1,12 +1,20 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
+import localFont from "next/font/local";
 import { useEffect, useRef } from "react";
 import enemies from "./enemies.webp";
 import players from "./players.webp";
 import { SteamWidget } from "./steam-widget/steam-widget";
 import upgrades from "./upgrades.webp";
 import styles from "./features.module.scss";
+
+const commando = localFont({
+  src: "./commando.ttf",
+  variable: "--font-commando",
+  adjustFontFallback: false,
+  display: "swap",
+});
 
 const features: {
   title: string;
@@ -71,7 +79,7 @@ export function Features() {
   }, []);
 
   return (
-    <section className={styles.features}>
+    <section className={`${styles.features} ${commando.variable}`}>
       <div className={styles.inner}>
         <div className={styles.widget}>
           <SteamWidget />
@@ -93,7 +101,21 @@ export function Features() {
                 </div>
               </div>
               <div className={styles.copy}>
-                <h2 className={styles.heading}>{feature.title}</h2>
+                <h2 className={styles.heading}>
+                  <span className={styles.depth} aria-hidden="true">
+                    {feature.title}
+                  </span>
+                  <span className={styles.shade} aria-hidden="true">
+                    {feature.title}
+                  </span>
+                  <span className={styles.lip} aria-hidden="true">
+                    {feature.title}
+                  </span>
+                  <span className={styles.fill}>{feature.title}</span>
+                  <span className={styles.sheen} aria-hidden="true">
+                    {feature.title}
+                  </span>
+                </h2>
                 <p className={styles.body}>{feature.copy}</p>
               </div>
             </article>
