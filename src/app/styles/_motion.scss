@@ -8,8 +8,12 @@ $fps: 24;
 $header-block: 102px;
 $nav-desktop: 48rem;
 
-$shine-from: translateX(-120%) skewX(-18deg);
-$shine-to: translateX(120%) skewX(-18deg);
+// The Global Steel stems lean this far from vertical, top toward the right.
+// A skewed band and a gradient at $shine-angle both follow that slant.
+$shine-slant: 19.3deg;
+$shine-angle: 90deg + $shine-slant;
+$shine-from: translateX(-120%) skewX($shine-slant * -1);
+$shine-to: translateX(120%) skewX($shine-slant * -1);
 
 // The Global Steel highlight crosses the wordmark in 16 frames at $fps.
 // This glint is the 42%–58% band of a rect traveling from -120% to 120%,

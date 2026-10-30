@@ -1,8 +1,15 @@
+@use "sass:math";
 @use "motion" as *;
 @use "tokens" as *;
 
 .features {
   padding: 3rem 1.25rem 4rem;
+}
+
+@media (max-width: 40rem) {
+  .features {
+    padding-top: 1.5rem;
+  }
 }
 
 .inner {
@@ -13,13 +20,14 @@
 .widget {
   max-width: 42rem;
   margin-inline: auto;
-  margin-bottom: 2.5rem;
+  margin-bottom: 5rem;
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  // Stacked layout. Larger than the gap between a picture and its text.
+  gap: 6.5rem;
 }
 
 .row {
@@ -46,15 +54,56 @@
   -webkit-font-smoothing: none;
 }
 
+.edgeFilter {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 .heading {
   position: relative;
   margin: 0 0 0.5rem;
   font-family: var(--font-commando), sans-serif;
-  font-size: 2.925rem;
+  font-size: 4.25rem;
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: 0.04em;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
+}
+
+.letters {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+  // Centers marked on THE BAD: bottom-left of the T, midpoint of the D's
+  // upper-right edge. Measured on the Commando ink, inside the line box.
+  // A wrapped title keeps those corners: the first line's bottom and the
+  // last line's top. The script sets the offsets; one line leaves them at 0.
+  --star-lift: 0px;
+  --star-drop: 0px;
+  --star-inset: 0px;
+  --star-shift: 0px;
+  --star-top: calc(0.073em + var(--star-drop));
+  --star-bottom: calc(0.225em + var(--star-lift));
+  --star-left: calc(0.07em + var(--star-shift));
+  --star-right: calc(0.023em + var(--star-inset));
+}
+
+// The A starts left of the T, and the S ends a little inside the D.
+.heading[data-corners="as"] .letters {
+  --star-left: calc(-0.033em + var(--star-shift));
+  --star-right: calc(0.038em + var(--star-inset));
+}
+
+.plate {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  // The clipped gradient is a hard mask on the vertical stems. Blur
+  // sideways only, so that step fades and the horizon stays sharp.
+  // The stars stay outside this box so the blur does not reach them.
+  filter: url("#feature-heading-smooth");
 }
 
 .fill,
@@ -72,16 +121,23 @@
 
 .fill {
   position: relative;
-  background-image: linear-gradient(
-    180deg,
-    #589ecf 0%,
-    #8ec8ef 16%,
-    #b2e8f8 32%,
-    #dff9ff 48%,
-    #6eb4de 64%,
-    #3a82b0 80%,
-    #5aa3d2 100%
-  );
+  // Horizon sits just above the letter's middle. It stays on a straight path,
+  // with the logo's short slopes, dips, and peaks, then the face returns to
+  // the same blue as the top.
+  background-image:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20200%20100'%20preserveAspectRatio%3D'none'%3E%3Cpath%20fill%3D'%23e8f7ff'%20d%3D'M0.0%2027.8L1.7%2028.1L4.0%2028.5L6.8%2029.0L9.5%2029.6L12.0%2030.2L14.2%2030.9L16.2%2031.7L18.2%2032.6L20.2%2033.4L22.0%2034.0L23.7%2034.5L25.3%2035.0L26.9%2035.4L28.4%2035.5L30.0%2035.4L31.6%2034.9L33.2%2034.1L34.8%2033.1L36.4%2032.1L38.0%2031.2L39.5%2030.3L41.0%2029.4L42.5%2028.5L44.1%2027.6L46.0%2027.0L48.1%2026.5L50.5%2026.1L53.0%2025.8L55.5%2025.7L58.0%2025.8L60.4%2026.1L62.8%2026.7L65.2%2027.4L67.6%2028.2L70.0%2029.0L72.4%2029.8L74.9%2030.7L77.3%2031.6L79.7%2032.4L82.0%2033.2L84.1%2033.9L86.1%2034.7L88.1%2035.4L90.0%2035.8L92.0%2036.0L94.0%2035.7L95.9%2035.2L97.9%2034.4L99.9%2033.5L102.0%2032.8L104.3%2032.1L106.7%2031.3L109.1%2030.6L111.6%2029.9L114.0%2029.4L116.4%2029.1L118.9%2028.9L121.3%2028.7L123.7%2028.6L126.0%2028.2L128.1%2027.5L130.1%2026.6L132.1%2025.7L134.0%2024.9L136.0%2024.6L138.0%2024.8L139.9%2025.4L141.9%2026.2L143.9%2027.1L146.0%2028.0L148.3%2028.8L150.7%2029.8L153.1%2030.7L155.6%2031.6L158.0%2032.4L160.4%2033.1L162.8%2033.8L165.2%2034.4L167.6%2034.7L170.0%2034.8L172.4%2034.4L174.9%2033.7L177.3%2032.7L179.7%2031.8L182.0%2031.0L184.2%2030.4L186.2%2029.8L188.2%2029.2L190.2%2028.8L192.0%2028.4L193.9%2028.1L195.7%2028.0L197.5%2027.9L198.9%2027.8L200.0%2027.8L200.0%2029.9L198.9%2029.9L197.5%2030.0L195.7%2030.0L193.9%2030.2L192.0%2030.5L190.2%2030.8L188.2%2031.3L186.2%2031.8L184.2%2032.4L182.0%2033.1L179.7%2033.8L177.3%2034.8L174.9%2035.7L172.4%2036.5L170.0%2036.9L167.6%2036.8L165.2%2036.4L162.8%2035.9L160.4%2035.2L158.0%2034.5L155.6%2033.7L153.1%2032.8L150.7%2031.8L148.3%2030.9L146.0%2030.1L143.9%2029.2L141.9%2028.3L139.9%2027.5L138.0%2026.9L136.0%2026.7L134.0%2027.0L132.1%2027.7L130.1%2028.6L128.1%2029.6L126.0%2030.3L123.7%2030.6L121.3%2030.8L118.9%2030.9L116.4%2031.1L114.0%2031.5L111.6%2032.0L109.1%2032.7L106.7%2033.4L104.3%2034.1L102.0%2034.9L99.9%2035.6L97.9%2036.4L95.9%2037.2L94.0%2037.8L92.0%2038.1L90.0%2037.9L88.1%2037.4L86.1%2036.8L84.1%2036.0L82.0%2035.3L79.7%2034.5L77.3%2033.6L74.9%2032.7L72.4%2031.8L70.0%2031.1L67.6%2030.3L65.2%2029.5L62.8%2028.8L60.4%2028.2L58.0%2027.9L55.5%2027.8L53.0%2027.9L50.5%2028.1L48.1%2028.5L46.0%2029.1L44.1%2029.7L42.5%2030.5L41.0%2031.4L39.5%2032.4L38.0%2033.3L36.4%2034.2L34.8%2035.2L33.2%2036.2L31.6%2037.0L30.0%2037.5L28.4%2037.6L26.9%2037.4L25.3%2037.1L23.7%2036.6L22.0%2036.1L20.2%2035.4L18.2%2034.6L16.2%2033.8L14.2%2033.0L12.0%2032.3L9.5%2031.6L6.8%2031.1L4.0%2030.6L1.7%2030.2L0.0%2029.9Z'%2F%3E%3Cpath%20fill%3D'%230b243c'%20d%3D'M0.0%2029.9L1.7%2030.2L4.0%2030.6L6.8%2031.1L9.5%2031.6L12.0%2032.3L14.2%2033.0L16.2%2033.8L18.2%2034.6L20.2%2035.4L22.0%2036.1L23.7%2036.6L25.3%2037.1L26.9%2037.4L28.4%2037.6L30.0%2037.5L31.6%2037.0L33.2%2036.2L34.8%2035.2L36.4%2034.2L38.0%2033.3L39.5%2032.4L41.0%2031.4L42.5%2030.5L44.1%2029.7L46.0%2029.1L48.1%2028.5L50.5%2028.1L53.0%2027.9L55.5%2027.8L58.0%2027.9L60.4%2028.2L62.8%2028.8L65.2%2029.5L67.6%2030.3L70.0%2031.1L72.4%2031.8L74.9%2032.7L77.3%2033.6L79.7%2034.5L82.0%2035.3L84.1%2036.0L86.1%2036.8L88.1%2037.4L90.0%2037.9L92.0%2038.1L94.0%2037.8L95.9%2037.2L97.9%2036.4L99.9%2035.6L102.0%2034.9L104.3%2034.1L106.7%2033.4L109.1%2032.7L111.6%2032.0L114.0%2031.5L116.4%2031.1L118.9%2030.9L121.3%2030.8L123.7%2030.6L126.0%2030.3L128.1%2029.6L130.1%2028.6L132.1%2027.7L134.0%2027.0L136.0%2026.7L138.0%2026.9L139.9%2027.5L141.9%2028.3L143.9%2029.2L146.0%2030.1L148.3%2030.9L150.7%2031.8L153.1%2032.8L155.6%2033.7L158.0%2034.5L160.4%2035.2L162.8%2035.9L165.2%2036.4L167.6%2036.8L170.0%2036.9L172.4%2036.5L174.9%2035.7L177.3%2034.8L179.7%2033.8L182.0%2033.1L184.2%2032.4L186.2%2031.8L188.2%2031.3L190.2%2030.8L192.0%2030.5L193.9%2030.2L195.7%2030.0L197.5%2030.0L198.9%2029.9L200.0%2029.9L200.0%2032.6L198.9%2032.6L197.5%2032.7L195.7%2032.8L193.9%2032.9L192.0%2033.2L190.2%2033.6L188.2%2034.0L186.2%2034.6L184.2%2035.2L182.0%2035.8L179.7%2036.6L177.3%2037.5L174.9%2038.5L172.4%2039.2L170.0%2039.6L167.6%2039.5L165.2%2039.2L162.8%2038.6L160.4%2037.9L158.0%2037.2L155.6%2036.4L153.1%2035.5L150.7%2034.6L148.3%2033.6L146.0%2032.8L143.9%2031.9L141.9%2031.0L139.9%2030.2L138.0%2029.6L136.0%2029.4L134.0%2029.7L132.1%2030.5L130.1%2031.4L128.1%2032.3L126.0%2033.0L123.7%2033.4L121.3%2033.5L118.9%2033.7L116.4%2033.9L114.0%2034.2L111.6%2034.7L109.1%2035.4L106.7%2036.1L104.3%2036.9L102.0%2037.6L99.9%2038.3L97.9%2039.2L95.9%2040.0L94.0%2040.5L92.0%2040.8L90.0%2040.6L88.1%2040.2L86.1%2039.5L84.1%2038.7L82.0%2038.0L79.7%2037.2L77.3%2036.4L74.9%2035.5L72.4%2034.6L70.0%2033.8L67.6%2033.0L65.2%2032.2L62.8%2031.5L60.4%2030.9L58.0%2030.6L55.5%2030.5L53.0%2030.6L50.5%2030.9L48.1%2031.3L46.0%2031.8L44.1%2032.4L42.5%2033.3L41.0%2034.2L39.5%2035.1L38.0%2036.0L36.4%2036.9L34.8%2037.9L33.2%2038.9L31.6%2039.7L30.0%2040.2L28.4%2040.3L26.9%2040.2L25.3%2039.8L23.7%2039.3L22.0%2038.8L20.2%2038.2L18.2%2037.4L16.2%2036.5L14.2%2035.7L12.0%2035.0L9.5%2034.4L6.8%2033.8L4.0%2033.3L1.7%2032.9L0.0%2032.6Z'%2F%3E%3Cdefs%3E%3ClinearGradient%20id%3D'band'%20gradientUnits%3D'userSpaceOnUse'%20x1%3D'0'%20y1%3D'36'%20x2%3D'0'%20y2%3D'100'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'%230e2b47'%2F%3E%3Cstop%20offset%3D'6%25'%20stop-color%3D'%2314385b'%2F%3E%3Cstop%20offset%3D'14%25'%20stop-color%3D'%23256091'%2F%3E%3Cstop%20offset%3D'22%25'%20stop-color%3D'%233e8bba'%2F%3E%3Cstop%20offset%3D'30%25'%20stop-color%3D'%23589ecf'%2F%3E%3Cstop%20offset%3D'48%25'%20stop-color%3D'%238ebfe8'%2F%3E%3Cstop%20offset%3D'64%25'%20stop-color%3D'%23c8f8fd'%2F%3E%3Cstop%20offset%3D'100%25'%20stop-color%3D'%23d8fbff'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20fill%3D'url(%23band)'%20d%3D'M0.0%2032.2L1.7%2032.5L4.0%2032.9L6.8%2033.4L9.5%2034.0L12.0%2034.6L14.2%2035.3L16.2%2036.1L18.2%2037.0L20.2%2037.8L22.0%2038.4L23.7%2038.9L25.3%2039.4L26.9%2039.8L28.4%2039.9L30.0%2039.8L31.6%2039.3L33.2%2038.5L34.8%2037.5L36.4%2036.5L38.0%2035.6L39.5%2034.7L41.0%2033.8L42.5%2032.9L44.1%2032.0L46.0%2031.4L48.1%2030.9L50.5%2030.5L53.0%2030.2L55.5%2030.1L58.0%2030.2L60.4%2030.5L62.8%2031.1L65.2%2031.8L67.6%2032.6L70.0%2033.4L72.4%2034.2L74.9%2035.1L77.3%2036.0L79.7%2036.8L82.0%2037.6L84.1%2038.3L86.1%2039.1L88.1%2039.8L90.0%2040.2L92.0%2040.4L94.0%2040.1L95.9%2039.6L97.9%2038.8L99.9%2037.9L102.0%2037.2L104.3%2036.5L106.7%2035.7L109.1%2035.0L111.6%2034.3L114.0%2033.8L116.4%2033.5L118.9%2033.3L121.3%2033.1L123.7%2033.0L126.0%2032.6L128.1%2031.9L130.1%2031.0L132.1%2030.1L134.0%2029.3L136.0%2029.0L138.0%2029.2L139.9%2029.8L141.9%2030.6L143.9%2031.5L146.0%2032.4L148.3%2033.2L150.7%2034.2L153.1%2035.1L155.6%2036.0L158.0%2036.8L160.4%2037.5L162.8%2038.2L165.2%2038.8L167.6%2039.1L170.0%2039.2L172.4%2038.8L174.9%2038.1L177.3%2037.1L179.7%2036.2L182.0%2035.4L184.2%2034.8L186.2%2034.2L188.2%2033.6L190.2%2033.2L192.0%2032.8L193.9%2032.5L195.7%2032.4L197.5%2032.3L198.9%2032.2L200.0%2032.2L200%20100L0%20100Z'%2F%3E%3C%2Fsvg%3E"),
+    linear-gradient(
+      180deg,
+      #589ecf 0%,
+      #8ec8ef 16%,
+      #b2e8f8 32%,
+      #dff9ff 48%,
+      #6eb4de 64%,
+      #3a82b0 80%,
+      #5aa3d2 100%
+    );
+  background-repeat: repeat-x, no-repeat;
+  background-size: 10em 100%, 100% 100%;
 }
 
 .depth,
@@ -94,39 +150,150 @@
 }
 
 .depth {
-  color: #1e5a86;
-  transform: translate(0.012em, 0.03em);
+  // Bottom face of the bevel. Shifted down only, so it does not
+  // paint a stepped edge along the sides.
+  color: #0c2744;
+  transform: translate(0, 0.016em);
 }
 
 .shade {
-  -webkit-text-stroke: 0.02em #c5e8f8;
-  transform: translate(0.004em, 0.008em);
+  // Top and bottom stay sharp. The side faces are blurred so the
+  // vertical stems do not stair-step.
+  text-shadow:
+    0 -0.016em 0 #f7fdff,
+    0.02em -0.02em 0.006em #ffffff,
+    0.012em 0 0.02em #5aa3d2,
+    0.02em 0.02em 0.006em #071826,
+    0 0.016em 0 #0b243c,
+    -0.02em 0.02em 0.006em #0c2744,
+    -0.012em 0 0.02em #8ec8ef,
+    -0.02em -0.02em 0.006em #ffffff;
 }
 
 .lip {
-  -webkit-text-stroke: 0.01em #f7fdff;
-  transform: translate(-0.004em, -0.006em);
+  text-shadow: 0 -0.012em 0.004em #f7fdff;
 }
 
 .sheen {
-  // The band sits in the middle of a 200% image. 0%–100% only slides that
-  // image from edge to edge, which parks the band on a title that fills the box.
+  // Same pass as the Global Steel frames: white on the rim, a pale wash
+  // on the face. The mask keeps the rim inside the band. The band sits in
+  // the middle of a 200% image, so 0%–100% would park it on the title.
+  -webkit-text-stroke: 0.045em #fff;
   background-image: linear-gradient(
-    108deg,
+    #{$shine-angle},
     rgb(255 255 255 / 0%) 42%,
-    rgb(255 255 255 / 85%) 50%,
+    rgb(255 255 255 / 42%) 50%,
     rgb(255 255 255 / 0%) 58%
   );
   background-size: 200% 100%;
   background-repeat: no-repeat;
   background-position: 130% 0;
+  -webkit-mask-image: linear-gradient(
+    #{$shine-angle},
+    rgb(255 255 255 / 0%) 40%,
+    #fff 48%,
+    #fff 52%,
+    rgb(255 255 255 / 0%) 60%
+  );
+  mask-image: linear-gradient(
+    #{$shine-angle},
+    rgb(255 255 255 / 0%) 40%,
+    #fff 48%,
+    #fff 52%,
+    rgb(255 255 255 / 0%) 60%
+  );
+  -webkit-mask-size: 200% 100%;
+  mask-size: 200% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 130% 0;
+  mask-position: 130% 0;
   animation: feature-shine $shine-loop linear infinite;
 }
 
+// 130% → -30% walks the 200%-wide band across the heading. The wash is the
+// 42%–58% slice, so the band has left the letters at -16%. That exit is
+// 16 frames into the 48-frame loop, which is when the logo glint ends and
+// the stars take over. The band stays off until the small star has faded
+// and the loop starts the glint again. $shine-sweep-stop is the longer
+// travel used by the chrome glints, so it is not the stop for this pass.
+$_sheen-from: 1.3;
+$_sheen-to: -0.3;
+$_sheen-clear: -0.16;
+$feature-shine-stop: math.percentage(
+  math.div(16, 48) * math.div($_sheen-from - $_sheen-to, $_sheen-from - $_sheen-clear)
+);
+
 @keyframes feature-shine {
-  #{$shine-sweep-stop},
+  #{$feature-shine-stop},
   100% {
     background-position: -30% 0;
+    -webkit-mask-position: -30% 0;
+    mask-position: -30% 0;
+  }
+}
+
+// Each picture is one frame of the Global Steel shine, on a shared canvas
+// so the sparkle grows in place. --i is that shine frame, so the big star
+// (19–35) leads and the small star (29–46) follows, on the same 2s clock.
+// A line of the logo is 154px and these canvases are nearly that tall.
+// Half of that share of the heading keeps the sparkle on the letter.
+$logo-line: 154;
+$star-scale: 0.5;
+
+.bigStar,
+.smallStar {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bigStar {
+  top: 0;
+  right: 0;
+  height: math.div(179, $logo-line) * $star-scale * 1em;
+  aspect-ratio: 153 / 179;
+  // Bright core is (70, 109) in the 153×179 canvas.
+  translate:
+    calc(#{math.div(153 - 70, $logo-line) * $star-scale * 1em} - var(--star-right))
+    calc(var(--star-top) - #{math.div(109, $logo-line) * $star-scale * 1em});
+}
+
+.smallStar {
+  bottom: 0;
+  left: 0;
+  height: math.div(124, $logo-line) * $star-scale * 1em;
+  aspect-ratio: 108 / 124;
+  // Bright core is (49, 47) in the 108×124 canvas.
+  translate:
+    calc(var(--star-left) - #{math.div(49, $logo-line) * $star-scale * 1em})
+    calc(#{math.div(124 - 47, $logo-line) * $star-scale * 1em} - var(--star-bottom));
+}
+
+.starFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  opacity: 0;
+  pointer-events: none;
+  animation: feature-star-frame $shine-loop infinite;
+  animation-delay: calc(var(--i) * 1s / var(--fps));
+}
+
+@keyframes feature-star-frame {
+  0% {
+    opacity: 1;
+    animation-timing-function: step-end;
+  }
+
+  #{math.percentage(math.div(1, 48))} {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -196,10 +363,10 @@
   }
 }
 
-// The long title fits one line only once each column is about 34rem.
+// The long title fits one line in the two-column row from here.
 @media (min-width: 75rem) {
   .heading {
-    font-size: 3.575rem;
+    font-size: 4rem;
   }
 }
 
@@ -219,5 +386,10 @@
 
   .sheen {
     animation: none;
+  }
+
+  .starFrame {
+    animation: none;
+    opacity: 0;
   }
 }
