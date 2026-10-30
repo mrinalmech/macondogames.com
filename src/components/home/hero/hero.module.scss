@@ -206,12 +206,25 @@ $total: $shots * $hold;
     20px,
     calc(100cqh - var(--wall-h) + var(--tuck) - 597px * var(--scale))
   );
-  // The belly of the cave, plus the narrow arch the letters actually sit in
-  // while the walls are still full size (about 916–1100px).
+  // The console center is clear below y=484 of the 597px bezel.
+  --bezel-lip: 113px;
+  // The wordmark stays at this size while the monitor is still up in the arch.
   --logo-cap: min(
     525px,
     calc(100cqw - var(--l2) * 0.917 - 56px),
     calc((100cqw - 686px) * 1.267 + 2.2 * max(0px, 916px - 100cqw))
+  );
+  // Through the band the letters occupy, rock reaches 190px into the 458px wall.
+  // Letters are 818/1024 of the file. Leave 16px of cave on each side, and keep
+  // them clear of the header mark (about 96px at each edge).
+  --cave-open: calc(100cqw - 2 * 190 / 458 * var(--l2));
+  --logo-open: max(
+    120px,
+    min(
+      525px,
+      calc((var(--cave-open) - 32px) * 1024 / 818),
+      calc((100cqw - 192px) * 1024 / 818)
+    )
   );
   // Once the walls meet, drop the wordmark so the gap under the arch
   // matches the gap above the console. 0 above 980px, about 12px at 916px.
@@ -230,8 +243,16 @@ $total: $shots * $hold;
   );
   height: min(100dvh, var(--section-h));
   min-height: min(800px, var(--section-h));
+  // Distance from the letter center to the monitor. It grows as the monitor drops.
+  --cave-gap: calc(
+    (100cqh - var(--monitor-bottom)) / 2 - 329.5px * var(--scale) - var(--drop)
+  );
+  // Half the letters, plus a little air, have to fit in that gap before the
+  // wordmark may grow from --logo-cap toward --logo-open.
+  --logo-room: calc((var(--cave-gap) - 24px) / 0.15625);
   --logo-w: min(
-    var(--logo-cap),
+    var(--logo-open),
+    max(var(--logo-cap), var(--logo-room)),
     calc(
       (50cqh - var(--monitor-bottom) / 2 - 323.5px * var(--scale) - 16px) /
         0.15625
@@ -405,14 +426,27 @@ $total: $shots * $hold;
 
 // Side by side, the blurb shrinks to about 10px. Stack it under the
 // pitch and leave room beneath the console so both stay readable.
+// Pitch and hold it just below the console. The slogan fits on one line
+// until the column is too narrow, then it breaks between phrases.
 @media (max-width: 40rem) {
   .hero {
-    height: calc(min(100dvh, var(--section-h)) + 200px);
-    min-height: calc(min(800px, var(--section-h)) + 200px);
+    --caption-gap: 16px;
+    --caption-pad: 28px;
+    // Wrapped slogan, plus up to three blurb lines.
+    --stacked-caption: 128px;
+    --caption-fit: calc(
+      var(--wall-h) - var(--tuck) + (597px - var(--bezel-lip)) * var(--scale) +
+        var(--caption-gap) + var(--stacked-caption) + var(--caption-pad)
+    );
+    height: max(min(100dvh, var(--section-h)), var(--caption-fit));
+    min-height: var(--caption-fit);
   }
 
   .caption {
-    bottom: 24px;
+    top: calc(
+      100% - var(--monitor-bottom) - var(--bezel-lip) * var(--scale) + var(--caption-gap)
+    );
+    bottom: auto;
     flex-direction: column;
     align-items: center;
     gap: 10px;
@@ -420,6 +454,10 @@ $total: $shots * $hold;
     translate: -50% 0;
     white-space: normal;
     text-align: center;
+  }
+
+  .pitch br {
+    display: none;
   }
 
   .pitch {
@@ -433,5 +471,19 @@ $total: $shots * $hold;
 
   .blurb br {
     display: none;
+  }
+}
+
+// A one-line slogan does not need the wrapped block, so the widget can sit closer.
+@media (min-width: 20.5rem) and (max-width: 40rem) {
+  .hero {
+    --caption-pad: 12px;
+    --stacked-caption: 108px;
+  }
+}
+
+@media (min-width: 24.5rem) and (max-width: 40rem) {
+  .hero {
+    --stacked-caption: 84px;
   }
 }

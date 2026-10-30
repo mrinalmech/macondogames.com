@@ -213,11 +213,9 @@ export function Hero() {
         </div>
         <div className={styles.caption}>
           <p className={styles.pitch}>
-            SUIT UP.
-            <br />
-            SHOOT &apos;EM UP.
-            <br />
-            LEVEL UP.
+            <span>SUIT UP.</span> <br />
+            <span>SHOOT &apos;EM UP.</span> <br />
+            <span>LEVEL UP.</span>
           </p>
           <p className={styles.blurb}>
             Global Steel is a 2D run-and-gun video game inspired by{" "}
