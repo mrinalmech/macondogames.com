@@ -8,7 +8,7 @@ import l1 from "./l1.png";
 import l2 from "./l2.png";
 import { logoShineFrames } from "./logo/frames";
 import logo from "./logo/logo.png";
-import monitor from "./monitor.png";
+import monitor from "./monitor.webp";
 import shot0 from "./screenshots/0.png";
 import shot1 from "./screenshots/1.png";
 import shot2 from "./screenshots/2.png";
@@ -18,6 +18,10 @@ import wallshade from "./wallshade.png";
 import styles from "./hero.module.scss";
 
 const screenshots = [shot0, shot1, shot2, shot3, shot4];
+const [openingShot, ...reel] = screenshots;
+
+// A slow bezel must not keep the hero blank. The fade starts anyway.
+const holdCeilingMs = 1000;
 
 type Intro = "hold" | "scene" | "copy" | "play";
 
@@ -31,6 +35,15 @@ function whenImageReady(img: HTMLImageElement) {
     img.addEventListener("load", finish, { once: true });
     img.addEventListener("error", finish, { once: true });
   }).then(decode);
+}
+
+function holdCeiling(ms: number) {
+  let timer = 0;
+  const promise = new Promise<void>((resolve) => {
+    timer = window.setTimeout(resolve, ms);
+  });
+
+  return { promise, clear: () => window.clearTimeout(timer) };
 }
 
 function whenFaded(element: HTMLElement) {
@@ -75,13 +88,21 @@ export function Hero() {
     if (!scene || !copy) return;
 
     let cancelled = false;
-    const images = [...scene.querySelectorAll("img"), ...copy.querySelectorAll("img")];
+    const ceiling = holdCeiling(holdCeilingMs);
+    // The visible frame is the shade, the lights, the bezel, and the opening
+    // shot. The wordmark catches up during the scene fade. The reel and the
+    // shine frames mount at "play", which is when they become visible.
+    const firstFrame = [...scene.querySelectorAll<HTMLImageElement>("img[data-first-frame]")];
+    const wordmark = copy.querySelector<HTMLImageElement>("img[data-wordmark]");
 
     (async () => {
       if (phase.current === "hold") {
-        await Promise.all(images.map(whenImageReady));
+        await Promise.race([Promise.all(firstFrame.map(whenImageReady)), ceiling.promise]);
+        ceiling.clear();
         if (cancelled) return;
       }
+
+      const wordmarkReady = wordmark ? whenImageReady(wordmark) : Promise.resolve();
 
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         if (phase.current !== "copy") flushSync(() => advance("copy"));
@@ -90,7 +111,7 @@ export function Hero() {
 
       if (phase.current === "hold") {
         flushSync(() => advance("scene"));
-        await whenFaded(scene);
+        await Promise.all([whenFaded(scene), wordmarkReady]);
         if (cancelled) return;
       }
 
@@ -105,36 +126,62 @@ export function Hero() {
 
     return () => {
       cancelled = true;
+      ceiling.clear();
     };
   }, []);
 
   return (
     <section className={styles.hero} data-hero data-intro={intro}>
       <div ref={sceneRef} className={styles.scene}>
-        <Image src={wallshade} alt="" priority className={styles.shade} />
-        <Image src={l2} alt="" priority className={styles.l2} />
-        <Image src={l2} alt="" priority className={`${styles.l2} ${styles.flip}`} />
-        <Image src={l1} alt="" priority className={styles.l1} />
-        <Image src={l1} alt="" priority className={`${styles.l1} ${styles.flip}`} />
+        <Image src={wallshade} alt="" loading="eager" data-first-frame="" className={styles.shade} />
+        <Image src={l2} alt="" loading="eager" data-first-frame="" className={styles.l2} />
+        <Image
+          src={l2}
+          alt=""
+          loading="eager"
+          data-first-frame=""
+          className={`${styles.l2} ${styles.flip}`}
+        />
+        <Image src={l1} alt="" loading="eager" data-first-frame="" className={styles.l1} />
+        <Image
+          src={l1}
+          alt=""
+          loading="eager"
+          data-first-frame=""
+          className={`${styles.l1} ${styles.flip}`}
+        />
         <div className={styles.monitor}>
           <div className={styles.screen} aria-hidden>
-            {screenshots.map((shot) => (
-              <Image
-                key={shot.src}
-                src={shot}
-                alt=""
-                sizes="620px"
-                loading="eager"
-                className={styles.shot}
-              />
-            ))}
+            <Image
+              src={openingShot}
+              alt=""
+              sizes="620px"
+              priority
+              fetchPriority="high"
+              loading="eager"
+              data-first-frame=""
+              className={styles.shot}
+            />
+            {intro === "play"
+              ? reel.map((shot) => (
+                  <Image
+                    key={shot.src}
+                    src={shot}
+                    alt=""
+                    sizes="620px"
+                    loading="lazy"
+                    className={styles.shot}
+                  />
+                ))
+              : null}
           </div>
           <Image
             src={monitor}
             alt=""
-            priority
             unoptimized
+            loading="eager"
             data-bezel
+            data-first-frame=""
             className={styles.bezel}
           />
         </div>
@@ -144,21 +191,24 @@ export function Hero() {
           <Image
             src={logo}
             alt={site.featuredGame.title}
-            priority
+            loading="eager"
+            data-wordmark=""
             className="h-auto w-full"
           />
           <div className={styles.shine} aria-hidden>
-            {logoShineFrames.map((frame, index) => (
-              <Image
-                key={frame.src}
-                src={frame}
-                alt=""
-                sizes="525px"
-                loading="eager"
-                className={styles.frame}
-                style={{ "--i": index } as CSSProperties}
-              />
-            ))}
+            {intro === "play"
+              ? logoShineFrames.map((frame, index) => (
+                  <Image
+                    key={frame.src}
+                    src={frame}
+                    alt=""
+                    sizes="525px"
+                    loading="lazy"
+                    className={styles.frame}
+                    style={{ "--i": index } as CSSProperties}
+                  />
+                ))
+              : null}
           </div>
         </div>
         <div className={styles.caption}>

@@ -27,11 +27,16 @@ export function SteamWidget() {
     const slot = slotRef.current;
     if (!slot || !("IntersectionObserver" in window)) return;
 
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry?.isIntersecting) return;
-      setActive(true);
-      observer.disconnect();
-    });
+    // A few pixels of the slot can sit in the first screen. Ignore that sliver
+    // so the Steam iframe stays out of the hero's load.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setActive(true);
+        observer.disconnect();
+      },
+      { rootMargin: "0px 0px -25% 0px" },
+    );
 
     observer.observe(slot);
     return () => observer.disconnect();

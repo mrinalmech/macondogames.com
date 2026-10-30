@@ -276,7 +276,8 @@ $total: $shots * $hold;
   scale: -1 1;
 }
 
-// Both groups stay hidden until every hero image has loaded.
+// The scene stays hidden until the first frame is ready, or the hold
+// ceiling passes. The wordmark finishes during that fade.
 .hero {
   &[data-intro="scene"],
   &[data-intro="copy"],
