@@ -306,19 +306,19 @@ $star-scale: 0.5;
   opacity: 0;
   transition:
     opacity 300ms linear,
-    translate 300ms linear;
+    transform 300ms linear;
 
   &[data-from="left"] {
-    translate: -1.5rem 0;
+    transform: translateX(-1.5rem);
   }
 
   &[data-from="right"] {
-    translate: 1.5rem 0;
+    transform: translateX(1.5rem);
   }
 
   &[data-shown] {
     opacity: 1;
-    translate: 0 0;
+    transform: translateX(0);
   }
 }
 
@@ -373,14 +373,14 @@ $star-scale: 0.5;
 @media (scripting: none) {
   .art[data-from] {
     opacity: 1;
-    translate: 0 0;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .art[data-from] {
     opacity: 1;
-    translate: 0 0;
+    transform: none;
     transition: none;
   }
 

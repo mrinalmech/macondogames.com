@@ -175,7 +175,7 @@ export function Features() {
                     <span className={styles.bigStar} aria-hidden="true">
                       {bigStarFrames.map((frame, index) => (
                         <Image
-                          key={frame.src}
+                          key={index}
                           src={frame}
                           alt=""
                           className={styles.starFrame}
@@ -186,7 +186,7 @@ export function Features() {
                     <span className={styles.smallStar} aria-hidden="true">
                       {smallStarFrames.map((frame, index) => (
                         <Image
-                          key={frame.src}
+                          key={index}
                           src={frame}
                           alt=""
                           className={styles.starFrame}

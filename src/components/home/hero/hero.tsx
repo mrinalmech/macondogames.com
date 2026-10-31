@@ -199,7 +199,7 @@ export function Hero() {
             {intro === "play"
               ? logoShineFrames.map((frame, index) => (
                   <Image
-                    key={frame.src}
+                    key={index}
                     src={frame}
                     alt=""
                     sizes="525px"

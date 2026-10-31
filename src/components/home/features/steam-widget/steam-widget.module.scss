@@ -62,10 +62,15 @@
 
 .frame {
   opacity: 0;
+  // Hidden until Steam has laid itself out. A cross-origin shift inside
+  // this frame still counts toward the page, and opacity alone does not
+  // take the frame out of that score.
+  visibility: hidden;
 }
 
 .frameIn {
   opacity: 1;
+  visibility: visible;
   transition: opacity 1s ease;
 }
 
