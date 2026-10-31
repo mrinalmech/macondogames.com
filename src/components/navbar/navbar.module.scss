@@ -8,6 +8,9 @@
 
 $menu-ease: cubic-bezier(0.22, 1, 0.36, 1);
 $menu-duration: 480ms;
+// That ease is about 95% done here, so the lines read as faded in while
+// the panel is still easing into place.
+$menu-fade: $menu-duration * 0.47;
 
 .logo {
   height: 70px;
@@ -46,14 +49,32 @@ $menu-duration: 480ms;
   pointer-events: none;
 }
 
+// The page left of the sheet is a held tape: a cool dim and static scanlines.
+// Once the lines have faded in, the bands snap up by half a line, hold, and snap back.
+// The live tube stays on the monitor.
 .scrim {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: rgb(0 0 0 / 0.6);
+  overflow: hidden;
+  background: rgb(10 36 72 / 0.28);
   opacity: 0;
   pointer-events: none;
+  backdrop-filter: saturate(0.35);
   transition: opacity $menu-duration $menu-ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    // Extra height so the snap stays filled with lines.
+    inset: -6px 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.55) 0 2px,
+      transparent 2px 5px
+    );
+    pointer-events: none;
+  }
 
   @media (min-width: $nav-desktop) {
     display: none;
@@ -67,6 +88,17 @@ $menu-duration: 480ms;
 .scrimOpen {
   opacity: 1;
   pointer-events: auto;
+
+  &::after {
+    animation: menu-track $vcr-lock step-end 1;
+    animation-delay: $menu-fade;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
 }
 
 .mobileNav {
@@ -134,5 +166,24 @@ $menu-duration: 480ms;
     min-height: 2.75rem;
     padding: 0.35rem 0.55rem 0.35rem 0;
     white-space: nowrap;
+  }
+}
+
+@keyframes menu-track {
+  0%,
+  40% {
+    transform: translateY(0);
+  }
+
+  // A hair past the hold so the change is a cut even if a timing function eases.
+  // The stops match the link lock: snap, then snap back, inside $vcr-lock.
+  40.01%,
+  75% {
+    transform: translateY(-2.5px);
+  }
+
+  75.01%,
+  100% {
+    transform: translateY(0);
   }
 }

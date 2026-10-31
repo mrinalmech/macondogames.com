@@ -22,7 +22,7 @@ $vcr-lock-frames: (
 }
 
 @mixin vcr-lock-once {
-  animation: vcr-lock 240ms linear 1;
+  animation: vcr-lock $vcr-lock linear 1;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;

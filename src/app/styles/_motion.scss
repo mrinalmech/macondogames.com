@@ -5,6 +5,9 @@ $edge-gap: 15px;
 // The cave, the wordmark, and then the floor grid each fade in over this.
 $intro: 0.8s;
 $fps: 24;
+// One tracking step, then a hold. The logo, the menu glyph, and the open
+// menu's scanlines all use it.
+$vcr-lock: 240ms;
 $header-block: 102px;
 $nav-desktop: 48rem;
 
