@@ -7,6 +7,8 @@ const sassLoader = {
       // Compressed output turns `@import "..."` into `@import"..."`
       // which Tailwind does not treat as an import.
       style: "expanded",
+      // So a module can `@use "motion"` the same way a partial `@use`s "tokens".
+      loadPaths: ["src/app/styles"],
     },
   },
 };

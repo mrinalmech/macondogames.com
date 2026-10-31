@@ -1,0 +1,489 @@
+@use "sass:math";
+@use "motion" as *;
+@use "tokens" as *;
+
+$frames: 48;
+$duration: math.div($frames, $fps) * 1s;
+
+.shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation-delay: calc(var(--i) * 1s / var(--fps));
+}
+
+@keyframes logo-shine {
+  0% {
+    opacity: 1;
+    animation-timing-function: step-end;
+  }
+
+  #{math.percentage(math.div(1, $frames))} {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+// Opening measured on the 3406×597 monitor. The box covers the clear
+// pixels and the one-pixel soft edge so the frame blends onto the picture.
+// The screen is centered, so scaling from the bottom center keeps the
+// shots in the opening. Wings may clip. Scaling starts before the screen
+// reaches the window so a strip of the frame stays visible.
+.monitor {
+  position: absolute;
+  bottom: var(--monitor-bottom);
+  left: round(nearest, 50%, 1px);
+  z-index: 40;
+  width: 3406px;
+  transform-origin: center bottom;
+  translate: -1703px 0;
+  scale: var(--scale);
+}
+
+.bezel {
+  position: relative;
+  z-index: 10;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+}
+
+.screen {
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  left: 1395px;
+  top: 61px;
+  width: 617px;
+  height: 278px;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  // Glass sheen rolling down the tube.
+  &::before {
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(255, 255, 255, 0.14) 46%,
+      transparent 54%
+    );
+    background-repeat: no-repeat;
+    background-size: 100% 45%;
+    animation: crt-sweep 8s linear infinite;
+  }
+
+  // Scanlines, phosphor grille, and the darkened tube edges.
+  &::after {
+    z-index: 2;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.28) 0 1px,
+        transparent 1px 3px
+      ),
+      repeating-linear-gradient(
+        to right,
+        rgba(255, 40, 40, 0.07) 0 1px,
+        rgba(40, 255, 80, 0.05) 1px 2px,
+        rgba(40, 80, 255, 0.07) 2px 3px
+      ),
+      radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.5) 100%);
+    box-shadow:
+      inset 0 0 18px rgba(0, 0, 0, 0.45),
+      inset 3px 0 0 rgba(255, 40, 80, 0.18),
+      inset -3px 0 0 rgba(40, 220, 255, 0.16);
+    animation: crt-flicker 0.15s steps(2, end) infinite;
+  }
+}
+
+$shots: 5;
+$hold: 5s;
+$fade: 0.8s;
+$total: $shots * $hold;
+
+// 620×281 covers the 617×278 opening plus the one-pixel soft edge.
+// An optimized file is smaller than that, so auto would leave a gap.
+.shot {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 620px;
+  height: 281px;
+  max-width: none;
+  opacity: 0;
+}
+
+// The first picture is on screen while the console fades in. The reel
+// itself starts only after the logo and caption have faded in.
+.shot:first-child {
+  opacity: 1;
+}
+
+@for $i from 1 through $shots {
+  .shot:nth-child(#{$i}) {
+    animation-delay: ($i - 1) * $hold - $total;
+  }
+}
+
+@keyframes screen-slideshow {
+  0% {
+    opacity: 1;
+  }
+
+  #{math.percentage(math.div($hold - $fade, $total))} {
+    opacity: 1;
+  }
+
+  #{math.percentage(math.div($hold, $total))} {
+    opacity: 0;
+  }
+
+  #{math.percentage(math.div($total - $fade, $total))} {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes crt-sweep {
+  0% {
+    background-position: 0 -50%;
+  }
+
+  100% {
+    background-position: 0 160%;
+  }
+}
+
+@keyframes crt-flicker {
+  0% {
+    opacity: 0.78;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+// The screen is 618px wide; scaling starts at 810px so ~96px of frame remains
+// on each side. Below 916px the walls shrink with the width, and the monitor
+// lifts so their bottoms stay behind it.
+// From about 1700px of width down, the section overrides 100dvh and shortens
+// with the width, so the cave stays close to the monitor.
+// A short wide window still floors at 800px so the wordmark stays clear.
+.hero {
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, #000, var(--background));
+  container-type: size;
+  --scale: min(1, calc(100cqw / 810px));
+  --l2: min(458px, 50cqw);
+  --wall-h: calc(var(--l2) * 676 / 458);
+  --tuck: 110px;
+  --monitor-bottom: max(
+    20px,
+    calc(100cqh - var(--wall-h) + var(--tuck) - 597px * var(--scale))
+  );
+  // The console center is clear below y=484 of the 597px bezel.
+  --bezel-lip: 113px;
+  // The wordmark stays at this size while the monitor is still up in the arch.
+  --logo-cap: min(
+    525px,
+    calc(100cqw - var(--l2) * 0.917 - 56px),
+    calc((100cqw - 686px) * 1.267 + 2.2 * max(0px, 916px - 100cqw))
+  );
+  // Through the band the letters occupy, rock reaches 190px into the 458px wall.
+  // Letters are 818/1024 of the file. Leave 16px of cave on each side, and keep
+  // them clear of the header mark (about 96px at each edge).
+  --cave-open: calc(100cqw - 2 * 190 / 458 * var(--l2));
+  --logo-open: max(
+    120px,
+    min(
+      525px,
+      calc((var(--cave-open) - 32px) * 1024 / 818),
+      calc((100cqw - 192px) * 1024 / 818)
+    )
+  );
+  // Once the walls meet, drop the wordmark so the gap under the arch
+  // matches the gap above the console. 0 above 980px, about 12px at 916px.
+  --formed: min(1, max(0, calc((980px - 100cqw) / 64px)));
+  --drop: calc(
+    var(--formed) * max(0px, 12px - 0.0125 * max(0px, 916px - 100cqw))
+  );
+  // 180px of air around the letters on a wide screen, down to 80px by 1200px.
+  // The floor keeps the letters 24px clear of the console.
+  --pad: max(
+    calc(24px + 56px * var(--scale)),
+    calc(80px + 0.2 * (100cqw - 1200px))
+  );
+  --section-h: calc(
+    var(--logo-cap) * 0.3125 + var(--pad) * 2 + 535px * var(--scale) + 20px
+  );
+  height: min(100dvh, var(--section-h));
+  min-height: min(800px, var(--section-h));
+  // Distance from the letter center to the monitor. It grows as the monitor drops.
+  --cave-gap: calc(
+    (100cqh - var(--monitor-bottom)) / 2 - 329.5px * var(--scale) - var(--drop)
+  );
+  // Half the letters, plus a little air, have to fit in that gap before the
+  // wordmark may grow from --logo-cap toward --logo-open.
+  --logo-room: calc((var(--cave-gap) - 24px) / 0.15625);
+  --logo-w: min(
+    var(--logo-open),
+    max(var(--logo-cap), var(--logo-room)),
+    calc(
+      (50cqh - var(--monitor-bottom) / 2 - 323.5px * var(--scale) - 16px) /
+        0.15625
+    )
+  );
+  --type: min(var(--scale), calc((100cqw - 32px) / 685px));
+}
+
+.shade {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 0;
+  width: 748px;
+  max-width: none;
+  height: auto;
+  translate: -50% 0;
+}
+
+.l1,
+.l2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  max-width: none;
+}
+
+.l2 {
+  z-index: 10;
+  width: var(--l2);
+}
+
+.l1 {
+  z-index: 20;
+  width: min(367px, calc(50cqw * 367 / 458));
+}
+
+.flip {
+  left: auto;
+  right: 0;
+  scale: -1 1;
+}
+
+// The scene stays hidden until the first frame is ready, or the hold
+// ceiling passes. The wordmark finishes during that fade.
+.hero {
+  &[data-intro="scene"],
+  &[data-intro="copy"],
+  &[data-intro="play"] {
+    .scene {
+      opacity: 1;
+      transition: opacity $intro ease;
+    }
+  }
+
+  &[data-intro="copy"],
+  &[data-intro="play"] {
+    .copy {
+      opacity: 1;
+      transition: opacity $intro ease;
+    }
+  }
+
+  &[data-intro="play"] {
+    // Longhands so the per-frame and per-slide delays stay intact.
+    .frame {
+      animation-name: logo-shine;
+      animation-duration: $duration;
+      animation-iteration-count: infinite;
+    }
+
+    .shot {
+      animation-name: screen-slideshow;
+      animation-duration: $total;
+      animation-iteration-count: infinite;
+    }
+  }
+}
+
+.scene,
+.copy {
+  opacity: 0;
+}
+
+@media (scripting: none) {
+  .scene,
+  .copy {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine {
+    display: none;
+  }
+
+  .hero .scene,
+  .hero .copy {
+    transition: none;
+  }
+
+  .frame,
+  .hero[data-intro="play"] .frame,
+  .shot,
+  .hero[data-intro="play"] .shot {
+    animation: none;
+  }
+
+  .shot {
+    opacity: 0;
+  }
+
+  .shot:first-child {
+    opacity: 1;
+  }
+
+  .screen::before,
+  .screen::after {
+    animation: none;
+  }
+}
+
+// Letters sit halfway between the hero top and the screen opening.
+// At full size the opening is 555px above the bottom and the center inset is 141.5px.
+// --drop lowers them once the cave has closed so the gaps above and below match.
+.wordmark {
+  position: absolute;
+  top: calc(
+    (100% - var(--monitor-bottom) - 535px * var(--scale)) / 2 - 141.5px *
+      (var(--logo-w) / 525px) + var(--drop)
+  );
+  left: 50%;
+  z-index: 30;
+  width: var(--logo-w);
+  translate: -50% 0;
+}
+
+.caption {
+  position: absolute;
+  z-index: 50;
+  bottom: calc(var(--monitor-bottom) + 56px * var(--scale) - 10px);
+  left: 50%;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  max-width: calc(100cqw - 32px);
+  gap: calc(42px * var(--type));
+  translate: -50% 50%;
+  font-family: $vcr-font;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  color: var(--nav-rest);
+  white-space: nowrap;
+  -webkit-font-smoothing: none;
+}
+
+.pitch,
+.blurb {
+  margin: 0;
+}
+
+.pitch {
+  font-size: calc(30px * var(--type));
+}
+
+.blurb {
+  font-size: calc(21px * var(--type));
+  line-height: 1.15;
+}
+
+// Side by side, the blurb shrinks to about 10px. Stack it under the
+// pitch and leave room beneath the console so both stay readable.
+// Pitch and hold it just below the console. The slogan fits on one line
+// until the column is too narrow, then it breaks between phrases.
+@media (max-width: 40rem) {
+  .hero {
+    --caption-gap: 16px;
+    --caption-pad: 28px;
+    // Wrapped slogan, plus up to three blurb lines.
+    --stacked-caption: 128px;
+    --caption-fit: calc(
+      var(--wall-h) - var(--tuck) + (597px - var(--bezel-lip)) * var(--scale) +
+        var(--caption-gap) + var(--stacked-caption) + var(--caption-pad)
+    );
+    height: max(min(100dvh, var(--section-h)), var(--caption-fit));
+    min-height: var(--caption-fit);
+  }
+
+  .caption {
+    top: calc(
+      100% - var(--monitor-bottom) - var(--bezel-lip) * var(--scale) + var(--caption-gap)
+    );
+    bottom: auto;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: calc(100cqw - 32px);
+    translate: -50% 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .pitch br {
+    display: none;
+  }
+
+  .pitch {
+    font-size: 22px;
+  }
+
+  .blurb {
+    font-size: 17px;
+    line-height: 1.3;
+  }
+
+  .blurb br {
+    display: none;
+  }
+}
+
+// A one-line slogan does not need the wrapped block, so the widget can sit closer.
+@media (min-width: 20.5rem) and (max-width: 40rem) {
+  .hero {
+    --caption-pad: 12px;
+    --stacked-caption: 108px;
+  }
+}
+
+@media (min-width: 24.5rem) and (max-width: 40rem) {
+  .hero {
+    --stacked-caption: 84px;
+  }
+}

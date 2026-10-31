@@ -1,0 +1,20 @@
+---
+description: Shared layout and motion values live in one Sass partial
+alwaysApply: true
+---
+
+# Shared motion values
+
+A length, time, or rate used in more than one file is a Sass variable in `src/app/styles/_motion.scss`. A value used by one component stays in that component's module.
+
+`_theme.scss` publishes a shared value as a custom property when a stylesheet or a client component needs it at runtime. JavaScript reads that property. It does not redeclare the number.
+
+Keyframe offsets stay Sass values. A custom property cannot be a keyframe stop.
+
+```scss
+@use "motion";
+
+padding-top: motion.$edge-gap;
+```
+
+`src/app/styles` is on the Sass load path, so modules and partials both `@use "motion"`. One-off measurements, such as a logo's pixel gap, stay in the component that measures them.

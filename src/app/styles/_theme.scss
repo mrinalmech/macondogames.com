@@ -1,3 +1,4 @@
+@use "motion" as *;
 @use "tokens" as *;
 
 :root {
@@ -6,9 +7,11 @@
   }
 
   --nav-rest: #{$nav-rest};
-  --nav-hover: #{$nav-hover};
-  --bar-tilt: 36px;
-  --edge-gap: 15px;
+  --bar-tilt: #{$bar-tilt};
+  --edge-gap: #{$edge-gap};
+  --fps: #{$fps};
+  --header-block: #{$header-block};
+  --nav-desktop: #{$nav-desktop};
 }
 
 @theme inline {

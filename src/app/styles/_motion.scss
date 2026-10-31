@@ -1,0 +1,46 @@
+@use "sass:math";
+
+$bar-tilt: 36px;
+$edge-gap: 15px;
+// The cave, the wordmark, and then the floor grid each fade in over this.
+$intro: 0.8s;
+$fps: 24;
+// One tracking step, then a hold. The logo, the menu glyph, and the open
+// menu's scanlines all use it.
+$vcr-lock: 240ms;
+$header-block: 102px;
+$nav-desktop: 48rem;
+
+// The Global Steel stems lean this far from vertical, top toward the right.
+// A skewed band and a gradient at $shine-angle both follow that slant.
+$shine-slant: 19.3deg;
+$shine-angle: 90deg + $shine-slant;
+$shine-from: translateX(-120%) skewX($shine-slant * -1);
+$shine-to: translateX(120%) skewX($shine-slant * -1);
+
+// The Global Steel highlight crosses the wordmark in 16 frames at $fps.
+// This glint is the 42%–58% band of a rect traveling from -120% to 120%,
+// so it overlaps the mark only from -58% to 58%.
+$_shine-frames: 16;
+$_shine-travel: 240;
+$_shine-overlap: 116;
+$shine-loop: 2s;
+$_shine-cross: math.div($_shine-frames, $fps) * 1s;
+$_shine-sweep: $_shine-cross * math.div($_shine-travel, $_shine-overlap);
+$shine-sweep-stop: math.percentage(math.div($_shine-sweep, $shine-loop));
+
+@mixin shine-keyframes($name) {
+  @keyframes #{$name} {
+    0% {
+      transform: $shine-from;
+    }
+
+    #{$shine-sweep-stop} {
+      transform: $shine-to;
+    }
+
+    100% {
+      transform: $shine-to;
+    }
+  }
+}

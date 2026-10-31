@@ -3,6 +3,7 @@ import { Geist, VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { CopyrightYear, YearFallback } from "@/components/copyright-year";
 import { Footer } from "@/components/footer";
+import { PerspectiveGrid } from "@/components/home/perspective-grid/perspective-grid";
 import { Navbar } from "@/components/navbar/navbar";
 import { site } from "@/lib/site";
 import "./globals.scss";
@@ -33,7 +34,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${vcr.variable} antialiased`}
     >
       <body className="min-h-dvh">
-        <div id="app-root" className="flex min-h-dvh flex-col">
+        <div data-page className="relative flex min-h-dvh flex-col">
+          <PerspectiveGrid />
           <a
             href="#content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-panel focus:px-3 focus:py-2 focus:text-signal"
@@ -42,12 +44,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </a>
           <Suspense
             fallback={
-              <div className="h-[102px]" />
+              <div className="h-(--header-block)" />
             }
           >
             <Navbar />
           </Suspense>
-          <div id="content" className="-mt-[102px] flex flex-1 flex-col">
+          <div id="content" className="relative z-[3] -mt-(--header-block) flex flex-1 flex-col">
             {children}
           </div>
           <Footer

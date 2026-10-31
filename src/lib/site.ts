@@ -1,6 +1,5 @@
 export const site = {
   name: "Macondo Games",
-  shortName: "MACONDO",
   tagline: "Independent studio. Worlds of steel, signal, and story.",
   featuredGame: {
     title: "Global Steel",
@@ -19,4 +18,7 @@ export const headerNavLinks = navLinks.filter(
   (link) => link.href !== "/" && link.href !== "/privacy",
 );
 
-export type NavHref = (typeof navLinks)[number]["href"];
+export function isCurrentPage(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname.startsWith(href);
+}

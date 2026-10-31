@@ -7,7 +7,7 @@ alwaysApply: true
 
 `src/app/globals.scss` is the stylesheet entry. It keeps the Tailwind import and pulls in shared partials with `@use`. Do not add component rules there.
 
-Shared styles live in partials under `src/app/styles/`. A partial filename starts with `_`, for example `src/app/styles/_tokens.scss`. From `globals.scss`, import it as `@use "styles/tokens"`.
+Shared styles live in partials under `src/app/styles/`. A partial filename starts with `_`, for example `src/app/styles/_tokens.scss`. From `globals.scss`, import it as `@use "styles/tokens"`. `sassOptions.loadPaths` includes that directory, so any stylesheet can `@use "tokens"` or `@use "motion"`.
 
 Styles for one component live in a CSS module beside that component, for example `src/components/navbar/navbar.module.scss`, imported from `navbar.tsx`. Layout that is already a Tailwind utility stays a utility class on the component.
 

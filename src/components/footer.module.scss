@@ -1,4 +1,8 @@
+@use "tokens" as *;
+
 .footer {
+  position: relative;
+  z-index: 3;
   background: #000;
   clip-path: polygon(0 var(--bar-tilt), 100% 0, 100% 100%, 0 100%);
   padding-top: calc(var(--bar-tilt) / 2 + var(--edge-gap));
@@ -29,11 +33,35 @@
 
 .copy {
   margin: 2rem 0 0;
-  font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
+  font-family: $vcr-font;
   font-size: 18px;
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--nav-rest);
   text-align: center;
+}
+
+// Five nav labels plus the copyright line are wider than a small phone.
+@media (max-width: 24rem) {
+  .footer {
+    padding-bottom: 2.25rem;
+  }
+
+  .group :global(.vcr-nav-link) {
+    padding: 0.25rem 0.3rem;
+    font-size: 16px;
+  }
+
+  .social {
+    gap: 0.9rem;
+  }
+
+  .social :global(svg) {
+    height: 22px;
+  }
+
+  .copy {
+    font-size: 14px;
+  }
 }

@@ -1,0 +1,119 @@
+@use "motion" as *;
+
+// Same treatment as macondogames.com: a 190px frame and a 168px card
+// placeholder. The page sets color-scheme: dark, which paints this
+// iframe's transparent canvas white, so the frame opts back out.
+// The glint uses the shared shine timing.
+.slot {
+  position: relative;
+  width: 100%;
+  max-width: 646px;
+  height: 190px;
+  margin-inline: auto;
+}
+
+.ghost {
+  position: absolute;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 168px;
+  background: #282e39;
+  border: 1px solid #2d3139;
+  overflow: hidden;
+  transition: opacity 1s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgb(255 255 255 / 0%) 0%,
+      rgb(255 255 255 / 0%) 42%,
+      rgb(255 255 255 / 85%) 50%,
+      rgb(255 255 255 / 0%) 58%,
+      rgb(255 255 255 / 0%) 100%
+    );
+    transform-origin: center;
+    transform: $shine-from;
+    animation: steam-chrome $shine-loop linear infinite;
+  }
+}
+
+.ghostOut {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.frame,
+.frameStatic {
+  position: relative;
+  z-index: 20;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color-scheme: normal;
+}
+
+.frame {
+  opacity: 0;
+  // Hidden until Steam has laid itself out. A cross-origin shift inside
+  // this frame still counts toward the page, and opacity alone does not
+  // take the frame out of that score.
+  visibility: hidden;
+}
+
+.frameIn {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1s ease;
+}
+
+.frameStatic {
+  display: none;
+}
+
+@include shine-keyframes(steam-chrome);
+
+@media screen and (max-width: 420px) {
+  .slot {
+    width: auto;
+    max-width: none;
+    height: 200px;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .slot {
+    margin-left: -18px;
+    margin-right: -18px;
+  }
+}
+
+@media (scripting: none) {
+  .ghost {
+    display: none;
+  }
+
+  .frameStatic {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ghost::after {
+    animation: none;
+  }
+
+  .ghost,
+  .frameIn {
+    transition: none;
+  }
+}

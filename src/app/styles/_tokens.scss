@@ -2,7 +2,7 @@
 @use "sass:map";
 
 $colors: (
-  "background": #6b21a8,
+  "background": #0e2442,
   "foreground": #e8eef4,
   "panel": #10151d,
   "signal": #4de8e0,
@@ -17,6 +17,7 @@ $nav-rest: #d7f6ef;
 $nav-hover: #f6fffb;
 $chroma: #ff3cac;
 $signal: map.get($colors, "signal");
+$vcr-font: var(--font-vcr), "VT323", ui-monospace, monospace;
 
 @function glow($color, $alpha) {
   @return color.change($color, $alpha: $alpha);

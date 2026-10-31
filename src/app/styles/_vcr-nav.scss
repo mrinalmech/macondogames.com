@@ -1,4 +1,5 @@
 @use "sass:list";
+@use "motion" as *;
 @use "tokens" as *;
 
 $vcr-lock-frames: (
@@ -21,7 +22,7 @@ $vcr-lock-frames: (
 }
 
 @mixin vcr-lock-once {
-  animation: vcr-lock 240ms linear 1;
+  animation: vcr-lock $vcr-lock linear 1;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -35,10 +36,67 @@ $vcr-lock-frames: (
   @include vcr-lock-once;
 }
 
+$rest-glow: 0 0 8px glow($signal, 0.28);
+
 @mixin vcr-focus-ring {
   outline: 2px solid var(--signal);
   outline-offset: 3px;
-  box-shadow: 0 0 8px glow($signal, 0.28);
+  box-shadow: $rest-glow;
+}
+
+@mixin vcr-split($name, $display) {
+  color: $nav-rest;
+  transition: color 80ms linear;
+
+  .#{$name}-mark {
+    position: relative;
+    display: $display;
+  }
+
+  .#{$name}-face {
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow($rest-glow);
+  }
+
+  .#{$name}-ghost {
+    position: absolute;
+    inset: 0;
+    display: $display;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .#{$name}-chroma {
+    color: glow($chroma, 0.9);
+    transform: translateX(2px);
+  }
+
+  .#{$name}-signal {
+    color: glow($signal, 0.9);
+    transform: translateX(-2px);
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: $nav-hover;
+
+    .#{$name}-mark {
+      @include vcr-lock-once;
+    }
+
+    .#{$name}-face {
+      filter: none;
+    }
+
+    .#{$name}-ghost {
+      opacity: 1;
+    }
+  }
+
+  &:focus-visible {
+    @include vcr-focus-ring;
+  }
 }
 
 .edge-links {
@@ -50,7 +108,7 @@ $vcr-lock-frames: (
   display: inline-flex;
   align-items: center;
   padding: 0.35rem 0.55rem;
-  font-family: var(--font-vcr), "VT323", ui-monospace, monospace;
+  font-family: $vcr-font;
   font-size: 22px;
   line-height: 1;
   letter-spacing: 0.02em;
@@ -61,7 +119,7 @@ $vcr-lock-frames: (
   transition: color 80ms linear;
 
   .vcr-nav-label {
-    text-shadow: 0 0 8px glow($signal, 0.28);
+    text-shadow: $rest-glow;
   }
 
   &[aria-current="page"] {
@@ -86,64 +144,13 @@ $vcr-lock-frames: (
 // chroma split is two colored copies offset the same way as the text-shadow.
 .vcr-icon-link {
   display: flex;
-  color: $nav-rest;
   text-decoration: none;
-  transition: color 80ms linear;
-
-  .vcr-icon-mark {
-    position: relative;
-    display: flex;
-  }
+  @include vcr-split(vcr-icon, flex);
 
   svg {
     display: block;
     height: 28px;
     width: auto;
-  }
-
-  .vcr-icon-face {
-    position: relative;
-    z-index: 1;
-    filter: drop-shadow(0 0 8px glow($signal, 0.28));
-  }
-
-  .vcr-icon-ghost {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .vcr-icon-chroma {
-    color: glow($chroma, 0.9);
-    transform: translateX(2px);
-  }
-
-  .vcr-icon-signal {
-    color: glow($signal, 0.9);
-    transform: translateX(-2px);
-  }
-
-  &:hover,
-  &:focus-visible {
-    color: $nav-hover;
-
-    .vcr-icon-mark {
-      @include vcr-lock-once;
-    }
-
-    .vcr-icon-face {
-      filter: none;
-    }
-
-    .vcr-icon-ghost {
-      opacity: 1;
-    }
-  }
-
-  &:focus-visible {
-    @include vcr-focus-ring;
   }
 }
 
@@ -168,12 +175,17 @@ $vcr-lock-frames: (
   .vcr-logo-shine {
     transform-box: fill-box;
     transform-origin: center;
-    transform: translateX(-120%) skewX(-18deg);
+    transform: $shine-from;
   }
 
   &:hover .vcr-logo-shine,
   &:focus-visible .vcr-logo-shine {
-    animation: vcr-chrome 2.25s linear infinite;
+    animation: vcr-chrome $shine-loop linear infinite;
+  }
+
+  &:hover .vcr-logo-mark,
+  &:focus-visible .vcr-logo-mark {
+    @include vcr-lock-once;
   }
 
   &:focus-visible {
@@ -191,61 +203,13 @@ $vcr-lock-frames: (
 
 .vcr-menu-button {
   cursor: pointer;
-  color: $nav-rest;
   background: transparent;
   border: 0;
-  transition: color 80ms linear;
+  @include vcr-split(vcr-menu, block);
 
   .vcr-menu-mark {
-    position: relative;
-    display: block;
     height: 15px;
     width: 1.25rem;
-  }
-
-  .vcr-menu-face {
-    position: relative;
-    z-index: 1;
-    filter: drop-shadow(0 0 8px glow($signal, 0.28));
-  }
-
-  .vcr-menu-ghost {
-    position: absolute;
-    inset: 0;
-    display: block;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .vcr-menu-chroma {
-    color: glow($chroma, 0.9);
-    transform: translateX(2px);
-  }
-
-  .vcr-menu-signal {
-    color: glow($signal, 0.9);
-    transform: translateX(-2px);
-  }
-
-  &:hover,
-  &:focus-visible {
-    color: $nav-hover;
-
-    .vcr-menu-mark {
-      @include vcr-lock-once;
-    }
-
-    .vcr-menu-face {
-      filter: none;
-    }
-
-    .vcr-menu-ghost {
-      opacity: 1;
-    }
-  }
-
-  &:focus-visible {
-    @include vcr-focus-ring;
   }
 }
 
@@ -253,16 +217,4 @@ $vcr-lock-frames: (
   @include vcr-step-frames($vcr-lock-frames);
 }
 
-@keyframes vcr-chrome {
-  0% {
-    transform: translateX(-120%) skewX(-18deg);
-  }
-
-  88.89% {
-    transform: translateX(120%) skewX(-18deg);
-  }
-
-  100% {
-    transform: translateX(120%) skewX(-18deg);
-  }
-}
+@include shine-keyframes(vcr-chrome);

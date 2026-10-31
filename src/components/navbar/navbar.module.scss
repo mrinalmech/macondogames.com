@@ -1,3 +1,17 @@
+@use "motion" as *;
+
+@property --menu-veil {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+$menu-ease: cubic-bezier(0.22, 1, 0.36, 1);
+$menu-duration: 480ms;
+// That ease is about 95% done here, so the lines read as faded in while
+// the panel is still easing into place.
+$menu-fade: $menu-duration * 0.47;
+
 .logo {
   height: 70px;
   width: auto;
@@ -5,6 +19,23 @@
 
 .bar {
   position: relative;
+  z-index: 2;
+  --menu-veil: 1;
+  transition: --menu-veil $menu-duration $menu-ease;
+
+  &[data-open] {
+    --menu-veil: 0;
+    pointer-events: none;
+
+    :global(a),
+    :global(button) {
+      pointer-events: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .barFill {
@@ -12,10 +43,147 @@
   inset: 0;
   z-index: -1;
   background: #000;
+  --bar-fill: 0;
+  opacity: calc(var(--bar-fill) * var(--menu-veil));
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--bar-tilt)), 0 100%);
   pointer-events: none;
 }
 
-.barOpen {
-  clip-path: none;
+// The page left of the sheet is a held tape: a cool dim and static scanlines.
+// Once the lines have faded in, the bands snap up by half a line, hold, and snap back.
+// The live tube stays on the monitor.
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: rgb(10 36 72 / 0.28);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: saturate(0.35);
+  transition: opacity $menu-duration $menu-ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    // Extra height so the snap stays filled with lines.
+    inset: -6px 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.55) 0 2px,
+      transparent 2px 5px
+    );
+    pointer-events: none;
+  }
+
+  @media (min-width: $nav-desktop) {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.scrimOpen {
+  opacity: 1;
+  pointer-events: auto;
+
+  &::after {
+    animation: menu-track $vcr-lock step-end 1;
+    animation-delay: $menu-fade;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+.mobileNav {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  transition: visibility 0s linear $menu-duration;
+
+  @media (min-width: $nav-desktop) {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.mobileNavOpen {
+  pointer-events: auto;
+  visibility: visible;
+  transition: visibility 0s linear 0s;
+}
+
+.mobileSheet {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  clip-path: polygon(
+    var(--menu-top-x, 60px) 0,
+    100% 0,
+    100% 100%,
+    var(--menu-foot-x, 20vw) 100%
+  );
+  transform: translateX(100%);
+  transition: transform $menu-duration $menu-ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.mobileNavOpen .mobileSheet {
+  transform: translateX(0);
+}
+
+.mobileLinks {
+  position: absolute;
+  top: var(--menu-cut-y, 51px);
+  left: var(--menu-cut-x, 61px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-origin: 0 0;
+  transform: rotate(calc(var(--menu-angle, 0deg) * -1))
+    translate(var(--edge-gap), var(--menu-link-shift, 63px));
+
+  :global(.vcr-nav-link) {
+    min-height: 2.75rem;
+    padding: 0.35rem 0.55rem 0.35rem 0;
+    white-space: nowrap;
+  }
+}
+
+@keyframes menu-track {
+  0%,
+  40% {
+    transform: translateY(0);
+  }
+
+  // A hair past the hold so the change is a cut even if a timing function eases.
+  // The stops match the link lock: snap, then snap back, inside $vcr-lock.
+  40.01%,
+  75% {
+    transform: translateY(-2.5px);
+  }
+
+  75.01%,
+  100% {
+    transform: translateY(0);
+  }
 }
