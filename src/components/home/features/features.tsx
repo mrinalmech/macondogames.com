@@ -2,7 +2,8 @@
 
 import Image, { type StaticImageData } from "next/image";
 import localFont from "next/font/local";
-import { useEffect, useLayoutEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
+import { HeldFrames } from "@/components/home/held-frames";
 import enemies from "./enemies.webp";
 import players from "./players.webp";
 import {
@@ -158,41 +159,30 @@ export function Features() {
                 >
                   <span className={styles.letters} data-letters>
                     <span className={styles.plate}>
-                      <span className={styles.depth} aria-hidden="true">
-                        {feature.title}
-                      </span>
-                      <span className={styles.shade} aria-hidden="true">
-                        {feature.title}
-                      </span>
-                      <span className={styles.lip} aria-hidden="true">
-                        {feature.title}
-                      </span>
-                      <span className={styles.fill} data-fill>{feature.title}</span>
-                      <span className={styles.sheen} aria-hidden="true">
-                        {feature.title}
-                      </span>
+                      {(["depth", "shade", "lip", "fill", "sheen"] as const).map((layer) => (
+                        <span
+                          key={layer}
+                          className={styles[layer]}
+                          aria-hidden={layer === "fill" ? undefined : true}
+                          {...(layer === "fill" ? { "data-fill": true } : {})}
+                        >
+                          {feature.title}
+                        </span>
+                      ))}
                     </span>
                     <span className={styles.bigStar} aria-hidden="true">
-                      {bigStarFrames.map((frame, index) => (
-                        <Image
-                          key={index}
-                          src={frame}
-                          alt=""
-                          className={styles.starFrame}
-                          style={{ "--i": bigStarFirstFrame + index } as CSSProperties}
-                        />
-                      ))}
+                      <HeldFrames
+                        frames={bigStarFrames}
+                        first={bigStarFirstFrame}
+                        className={styles.starFrame}
+                      />
                     </span>
                     <span className={styles.smallStar} aria-hidden="true">
-                      {smallStarFrames.map((frame, index) => (
-                        <Image
-                          key={index}
-                          src={frame}
-                          alt=""
-                          className={styles.starFrame}
-                          style={{ "--i": smallStarFirstFrame + index } as CSSProperties}
-                        />
-                      ))}
+                      <HeldFrames
+                        frames={smallStarFrames}
+                        first={smallStarFirstFrame}
+                        className={styles.starFrame}
+                      />
                     </span>
                   </span>
                 </h2>

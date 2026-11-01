@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { headerNavLinks, isCurrentPage, site } from "@/lib/site";
+import { headerNavLinks, site } from "@/lib/site";
+import { VcrMark } from "@/components/shared/vcr-mark";
+import { VcrNav, VcrNavLink } from "@/components/shared/vcr-nav-link";
 import logo from "./logo.png";
 import styles from "./navbar.module.scss";
 
@@ -31,28 +33,6 @@ const barFadeDistance = 80;
 const logoGap = 74.5 / 137;
 // Where the open panel's left edge meets the bottom of the screen.
 const menuFoot = 0.2;
-
-function NavLink({
-  href,
-  label,
-  pathname,
-}: {
-  href: (typeof headerNavLinks)[number]["href"];
-  label: string;
-  pathname: string;
-}) {
-  const active = isCurrentPage(pathname, href);
-
-  return (
-    <Link
-      href={href}
-      className="vcr-nav-link"
-      aria-current={active ? "page" : undefined}
-    >
-      <span className="vcr-nav-label">{label}</span>
-    </Link>
-  );
-}
 
 export function Navbar() {
   const pathname = usePathname();
@@ -246,14 +226,12 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav
+        <VcrNav
+          label="Primary"
+          links={headerNavLinks}
+          pathname={pathname}
           className="edge-links hidden items-center gap-1 self-start md:flex"
-          aria-label="Primary"
-        >
-          {headerNavLinks.map((link) => (
-            <NavLink key={link.href} pathname={pathname} {...link} />
-          ))}
-        </nav>
+        />
 
         <button
           type="button"
@@ -263,17 +241,7 @@ export function Navbar() {
           onClick={() => setOpen((value) => !value)}
         >
           <span className="sr-only">{open ? "Close menu" : "Open menu"}</span>
-          <span className="vcr-menu-mark" aria-hidden>
-            <span className="vcr-menu-ghost vcr-menu-chroma">
-              <MenuGlyph open={open} />
-            </span>
-            <span className="vcr-menu-ghost vcr-menu-signal">
-              <MenuGlyph open={open} />
-            </span>
-            <span className="vcr-menu-face">
-              <MenuGlyph open={open} />
-            </span>
-          </span>
+          <VcrMark name="vcr-menu" hidden render={() => <MenuGlyph open={open} />} />
         </button>
       </div>
 
@@ -293,7 +261,7 @@ export function Navbar() {
           <ul className={styles.mobileLinks}>
             {headerNavLinks.map((link) => (
               <li key={link.href}>
-                <NavLink pathname={pathname} {...link} />
+                <VcrNavLink pathname={pathname} {...link} />
               </li>
             ))}
           </ul>

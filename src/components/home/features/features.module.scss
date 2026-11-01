@@ -2,11 +2,13 @@
 @use "motion" as *;
 @use "tokens" as *;
 
+$band: 5rem;
+
 .features {
   padding: 3rem 1.25rem 4rem;
 }
 
-@media (max-width: 40rem) {
+@media (max-width: $compact) {
   .features {
     padding-top: 1.5rem;
   }
@@ -20,7 +22,7 @@
 .widget {
   max-width: 42rem;
   margin-inline: auto;
-  margin-bottom: 5rem;
+  margin-bottom: $band;
 }
 
 .list {
@@ -47,7 +49,7 @@
   flex-direction: column;
   justify-content: center;
   font-family: $vcr-font;
-  letter-spacing: 0.02em;
+  letter-spacing: $vcr-tracking;
   line-height: 1.2;
   color: var(--foreground);
   text-align: center;
@@ -213,15 +215,16 @@
 
 // 130% → -30% walks the 200%-wide band across the heading. The wash is the
 // 42%–58% slice, so the band has left the letters at -16%. That exit is
-// 16 frames into the 48-frame loop, which is when the logo glint ends and
-// the stars take over. The band stays off until the small star has faded
-// and the loop starts the glint again. $shine-sweep-stop is the longer
+// $shine-frames into the $strip-frames loop, which is when the logo glint
+// ends and the stars take over. The band stays off until the small star has
+// faded and the loop starts the glint again. $shine-sweep-stop is the longer
 // travel used by the chrome glints, so it is not the stop for this pass.
 $_sheen-from: 1.3;
 $_sheen-to: -0.3;
 $_sheen-clear: -0.16;
 $feature-shine-stop: math.percentage(
-  math.div(16, 48) * math.div($_sheen-from - $_sheen-to, $_sheen-from - $_sheen-clear)
+  math.div($shine-frames, $strip-frames) *
+    math.div($_sheen-from - $_sheen-to, $_sheen-from - $_sheen-clear)
 );
 
 @keyframes feature-shine {
@@ -279,23 +282,10 @@ $star-scale: 0.5;
   opacity: 0;
   pointer-events: none;
   animation: feature-star-frame $shine-loop infinite;
-  animation-delay: calc(var(--i) * 1s / var(--fps));
+  @include frame-delay;
 }
 
-@keyframes feature-star-frame {
-  0% {
-    opacity: 1;
-    animation-timing-function: step-end;
-  }
-
-  #{math.percentage(math.div(1, 48))} {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
+@include frame-hold(feature-star-frame);
 
 .body {
   margin: 0;
@@ -330,26 +320,22 @@ $star-scale: 0.5;
   margin-inline: auto;
 }
 
-@media (min-width: 48rem) {
+@media (min-width: $nav-desktop) {
   .features {
-    padding: 5rem 1.5rem;
+    padding: $band 1.5rem;
   }
 
   .heading {
     margin-bottom: 1rem;
   }
 
-  .widget {
-    margin-bottom: 5rem;
-  }
-
   .list {
-    gap: 5rem;
+    gap: $band;
   }
 
   .row {
     grid-template-columns: 1fr 1fr;
-    gap: 5rem;
+    gap: $band;
   }
 
   .flip {
@@ -370,7 +356,7 @@ $star-scale: 0.5;
   }
 }
 
-@media (scripting: none) {
+@media (scripting: none), (prefers-reduced-motion: reduce) {
   .art[data-from] {
     opacity: 1;
     transform: none;
@@ -379,8 +365,6 @@ $star-scale: 0.5;
 
 @media (prefers-reduced-motion: reduce) {
   .art[data-from] {
-    opacity: 1;
-    transform: none;
     transition: none;
   }
 

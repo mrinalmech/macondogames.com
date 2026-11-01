@@ -111,7 +111,7 @@ $rest-glow: 0 0 8px glow($signal, 0.28);
   font-family: $vcr-font;
   font-size: 22px;
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: $vcr-tracking;
   text-transform: uppercase;
   color: $nav-rest;
   text-decoration: none;

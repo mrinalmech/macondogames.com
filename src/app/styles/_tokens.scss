@@ -18,6 +18,12 @@ $nav-hover: #f6fffb;
 $chroma: #ff3cac;
 $signal: map.get($colors, "signal");
 $vcr-font: var(--font-vcr), "VT323", ui-monospace, monospace;
+$vcr-tracking: 0.02em;
+
+// The black arch shared by the hero and the floor grid.
+@mixin cave {
+  background-image: linear-gradient(to bottom, #000, var(--background));
+}
 
 @function glow($color, $alpha) {
   @return color.change($color, $alpha: $alpha);

@@ -8,13 +8,34 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
+## Component layout
+
+Place a component by who imports it now. When that set of callers changes, move the component and its module in the same change. This applies to existing components as well as new ones.
+
+`src/components/shared` is for a component the layout renders, or one that more than one page imports. `src/components/<page>` is for a component that only that page imports. Nest a component inside the one section that uses it.
+
+```
+src/components/shared/navbar/navbar.tsx
+src/components/home/hero/hero.tsx
+src/components/home/features/steam-widget/steam-widget.tsx
+```
+
+Move it when the callers change:
+
+- A second page starts importing a page section: move it to `shared`.
+- A shared component is left with one page: move it into that page's folder.
+- A page-level component is left with one section: nest it inside that section.
+- A nested component is imported by another section of the same page: lift it to that page's folder.
+
+A CSS module stays beside its component and moves with it.
+
 ## Sass styles
 
 `src/app/globals.scss` is the stylesheet entry. It keeps the Tailwind import and pulls in shared partials with `@use`. Do not add component rules there.
 
 Shared styles live in partials under `src/app/styles/`. A partial filename starts with `_`, for example `src/app/styles/_tokens.scss`. From `globals.scss`, import it as `@use "styles/tokens"`. `sassOptions.loadPaths` includes that directory, so any stylesheet can `@use "tokens"` or `@use "motion"`.
 
-Styles for one component live in a CSS module beside that component, for example `src/components/navbar/navbar.module.scss`, imported from `navbar.tsx`. Layout that is already a Tailwind utility stays a utility class on the component.
+Styles for one component live in a CSS module beside that component, for example `src/components/shared/navbar/navbar.module.scss`, imported from `navbar.tsx`. Layout that is already a Tailwind utility stays a utility class on the component.
 
 `next.config.ts` compiles `globals.scss` through Sass and Tailwind. It compiles `*.module.scss` with `sass-loader` and `as: "*.module.css"`. The `*.css` rule must exclude `*.module.css`. That pattern also matches module files, and treating one as plain CSS drops the class-name exports.
 

@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { HeldFrames } from "@/components/home/held-frames";
 import { site } from "@/lib/site";
 import l1 from "./l1.png";
 import l2 from "./l2.png";
@@ -196,19 +197,14 @@ export function Hero() {
             className="h-auto w-full"
           />
           <div className={styles.shine} aria-hidden>
-            {intro === "play"
-              ? logoShineFrames.map((frame, index) => (
-                  <Image
-                    key={index}
-                    src={frame}
-                    alt=""
-                    sizes="525px"
-                    loading="lazy"
-                    className={styles.frame}
-                    style={{ "--i": index } as CSSProperties}
-                  />
-                ))
-              : null}
+            {intro === "play" ? (
+              <HeldFrames
+                frames={logoShineFrames}
+                className={styles.frame}
+                sizes="525px"
+                loading="lazy"
+              />
+            ) : null}
           </div>
         </div>
         <div className={styles.caption}>
