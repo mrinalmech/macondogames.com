@@ -1,0 +1,26 @@
+@use "motion" as *;
+
+.page {
+  padding: calc(var(--header-block) + 1.75rem) 1.25rem 4.5rem;
+}
+
+.inner {
+  max-width: 72rem;
+  margin-inline: auto;
+  min-width: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  min-width: 0;
+}
+
+@media (min-width: $nav-desktop) {
+  .layout {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 2.75rem;
+  }
+}

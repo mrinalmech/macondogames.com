@@ -1,0 +1,96 @@
+@use "motion" as *;
+@use "tokens" as *;
+
+.body {
+  min-width: 0;
+  font-size: $copy-size;
+
+  p {
+    margin: 0.8rem 0 0;
+    line-height: 1.55;
+  }
+}
+
+.heading {
+  margin: 0;
+  color: $signal;
+  font-family: $vcr-font;
+  font-size: 1.6rem;
+  font-weight: 400;
+  letter-spacing: $vcr-tracking;
+  line-height: 1;
+  text-transform: uppercase;
+  -webkit-font-smoothing: none;
+}
+
+.section + .section {
+  margin-top: 2.5rem;
+}
+
+.list {
+  margin: 0.8rem 0 0;
+  padding-left: 1.15rem;
+  list-style: disc;
+
+  li + li {
+    margin-top: 0.4rem;
+  }
+}
+
+.shots,
+.logos {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shots {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.shot {
+  display: block;
+  background: #000;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.logo {
+  display: block;
+  width: fit-content;
+}
+
+.companyLogo {
+  // Ink is 541 of 567 pixels. Global Steel ink is 530 of 752, at 13rem tall.
+  width: calc(13rem * 530 / 752 * 567 / 541);
+  height: auto;
+}
+
+.gameLogo {
+  width: auto;
+  height: 13rem;
+}
+
+.shot:focus-visible,
+.logo:focus-visible {
+  outline: 2px solid $signal;
+  outline-offset: 3px;
+}
+
+@media (min-width: $nav-desktop) {
+  .shots {
+    grid-template-columns: 1fr 1fr;
+  }
+}

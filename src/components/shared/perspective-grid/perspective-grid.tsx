@@ -129,10 +129,40 @@ export function PerspectiveGrid() {
     const sky = skyRef.current;
     const cover = coverRef.current;
     const svg = svgRef.current;
-    // Other routes keep the homepage mounted and hide it. A hidden hero
-    // must not bring the grid back.
-    if (!page || !hero || !img || !sky || !cover || !svg) return;
-    if (hero.getClientRects().length === 0) return;
+    if (!page || !svg || !sky || !cover) return;
+
+    // The press page has no monitor. The floor still covers the viewport.
+    // A hidden hero must not bring the grid back on its own.
+    if (!hero || !img || hero.getClientRects().length === 0) {
+      if (!document.querySelector("[data-floor]")) return;
+
+      let frame = 0;
+      const draw = () => {
+        const viewWidth = svg.clientWidth;
+        const viewHeight = svg.clientHeight;
+        if (viewWidth > 0 && viewHeight > 0) drawGrid(svg, viewWidth, viewHeight);
+        svg.style.visibility = "visible";
+        svg.classList.add(styles.shown);
+      };
+      const schedule = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(draw);
+      };
+
+      schedule();
+      const observer = new ResizeObserver(schedule);
+      observer.observe(svg);
+      window.addEventListener("resize", schedule);
+
+      return () => {
+        cancelAnimationFrame(frame);
+        observer.disconnect();
+        window.removeEventListener("resize", schedule);
+        svg.classList.remove(styles.shown);
+        svg.style.visibility = "hidden";
+        svg.replaceChildren();
+      };
+    }
 
     let pixels: ImageData | null = null;
     let frame = 0;

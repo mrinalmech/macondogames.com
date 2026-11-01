@@ -24,10 +24,36 @@ Move it when the callers change:
 
 - A second page starts importing a page section: move it to `shared`.
 - A shared component is left with one page: move it into that page's folder.
-- A page-level component is left with one section: nest it inside that section.
+- A component is left with one section: nest it inside that section.
 - A nested component is imported by another section of the same page: lift it to that page's folder.
 
 A CSS module stays beside its component and moves with it.
+
+## Page composition
+
+A route's `page.tsx` imports that page's sections and places them. The page owns the shell that arranges those sections, including its module.
+
+```tsx
+export default function PressPage() {
+  return (
+    <main className="flex flex-1 flex-col">
+      <article className={styles.page}>
+        <div className={styles.inner}>
+          <PressTitle />
+          <div className={styles.layout}>
+            <Factsheet />
+            <Kit />
+          </div>
+        </div>
+      </article>
+    </main>
+  );
+}
+```
+
+Name a section for what it is (`hero`, `factsheet`, `kit`) and keep its module beside it. The home page is the same shape: `page.tsx` imports `Hero` and `Features`.
+
+The page is the only place that assembles the whole route.
 
 ## Sass styles
 

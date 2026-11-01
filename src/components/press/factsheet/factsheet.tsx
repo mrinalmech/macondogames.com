@@ -1,0 +1,53 @@
+import Image from "next/image";
+import holder from "./holder.png";
+import styles from "./factsheet.module.scss";
+
+const facts = [
+  { label: "Developer", value: "Macondo Games" },
+  { label: "Release date", value: "TBA" },
+  { label: "Platforms", value: "PC", href: "https://store.steampowered.com/app/1073970/" },
+  { label: "Website", value: "macondogames.com", href: "https://macondogames.com" },
+  { label: "Press", value: "press@macondogames.com", href: "mailto:press@macondogames.com" },
+];
+
+function FactValue({ value, href }: { value: string; href?: string }) {
+  if (!href) return value;
+
+  const external = href.startsWith("http");
+
+  return (
+    <a
+      className={styles.link}
+      href={href}
+      {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+    >
+      {value}
+    </a>
+  );
+}
+
+export function Factsheet() {
+  return (
+    <aside className={styles.holder}>
+      <div className={styles.screen}>
+        <h2 className={styles.heading}>Factsheet</h2>
+        <dl className={styles.facts}>
+          {facts.map((fact) => (
+            <div key={fact.label} className={styles.fact}>
+              <dt>{fact.label}</dt>
+              <dd>
+                <FactValue value={fact.value} href={fact.href} />
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <Image
+        src={holder}
+        alt=""
+        unoptimized
+        className={styles.bezel}
+      />
+    </aside>
+  );
+}

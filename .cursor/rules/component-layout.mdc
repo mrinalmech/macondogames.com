@@ -19,7 +19,7 @@ Move it when the callers change:
 
 - A second page starts importing a page section: move it to `shared`.
 - A shared component is left with one page: move it into that page's folder.
-- A page-level component is left with one section: nest it inside that section.
+- A component is left with one section: nest it inside that section.
 - A nested component is imported by another section of the same page: lift it to that page's folder.
 
 A CSS module stays beside its component and moves with it.

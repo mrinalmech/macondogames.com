@@ -1,0 +1,24 @@
+.title {
+  margin-bottom: 2rem;
+  text-align: center;
+
+  // GLOBAL STEEL tops out at 525px wide. At 4rem, PRESS KIT measures 281px,
+  // so 7.5rem lands on that same width and the viewport term keeps it on one line.
+  h1 {
+    font-size: min(7.5rem, calc((100vw - 5rem) / 4.5));
+  }
+
+  // Feature titles mark a T and a D. PRESS KIT starts on a P and ends on a T,
+  // so the spark sits on the P's foot and the tip of the T's bar.
+  [data-letters] {
+    --star-left: 0em;
+    --star-bottom: 0.34em;
+    --star-right: 0.1em;
+    --star-top: 0.15em;
+  }
+}
+
+.bigStar,
+.smallStar {
+  scale: 0.78;
+}
