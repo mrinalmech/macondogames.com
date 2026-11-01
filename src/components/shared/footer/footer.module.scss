@@ -36,7 +36,7 @@
   font-family: $vcr-font;
   font-size: 18px;
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: $vcr-tracking;
   text-transform: uppercase;
   color: var(--nav-rest);
   text-align: center;

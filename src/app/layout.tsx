@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, VT323 } from "next/font/google";
 import { Suspense } from "react";
-import { CopyrightYear, YearFallback } from "@/components/copyright-year";
-import { Footer } from "@/components/footer";
-import { PerspectiveGrid } from "@/components/home/perspective-grid/perspective-grid";
-import { Navbar } from "@/components/navbar/navbar";
+import { CopyrightYear, YearFallback } from "@/components/shared/footer/copyright-year";
+import { Footer } from "@/components/shared/footer/footer";
+import { Navbar } from "@/components/shared/navbar/navbar";
+import { PerspectiveGrid } from "@/components/shared/perspective-grid/perspective-grid";
 import { site } from "@/lib/site";
 import "./globals.scss";
 

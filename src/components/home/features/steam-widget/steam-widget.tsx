@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import styles from "./steam-widget.module.scss";
 
 const widgetUrl = "https://store.steampowered.com/widget/1073970/";
+const widgetTitle = "Global Steel on Steam";
 
 // Share of the grey card that must sit in the viewport before Steam loads.
 // 40% of the 168px placeholder is about 67px: past a peeking edge, and early
@@ -57,7 +58,7 @@ export function SteamWidget() {
         <iframe
           className={ready ? `${styles.frame} ${styles.frameIn}` : styles.frame}
           src={widgetUrl}
-          title="Global Steel on Steam"
+          title={widgetTitle}
           onLoad={() => setReady(true)}
         />
       ) : null}
@@ -65,7 +66,7 @@ export function SteamWidget() {
         <iframe
           className={styles.frameStatic}
           src={widgetUrl}
-          title="Global Steel on Steam"
+          title={widgetTitle}
         />
       </noscript>
     </div>

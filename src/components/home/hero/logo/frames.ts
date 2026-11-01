@@ -1,4 +1,5 @@
 import type { StaticImageData } from "next/image";
+import { holdFrames } from "@/components/home/hold-frames";
 import frame0 from "./shine/0.png";
 import frame1 from "./shine/1.png";
 import frame3 from "./shine/3.png";
@@ -28,26 +29,22 @@ import frame42 from "./shine/42.png";
 import frame44 from "./shine/44.png";
 import frame46 from "./shine/46.png";
 
-function hold(frame: StaticImageData, count: number) {
-  return Array.from({ length: count }, () => frame);
-}
-
 // One entry per 24fps step. A repeated picture is a hold, stored once.
 export const logoShineFrames: StaticImageData[] = [
   frame0,
-  ...hold(frame1, 2),
-  ...hold(frame3, 2),
-  ...hold(frame5, 2),
-  ...hold(frame7, 2),
-  ...hold(frame9, 2),
-  ...hold(frame11, 2),
-  ...hold(frame13, 2),
-  ...hold(frame15, 2),
-  ...hold(frame0, 2),
-  ...hold(frame19, 2),
-  ...hold(frame21, 2),
-  ...hold(frame23, 2),
-  ...hold(frame25, 3),
+  ...holdFrames(frame1, 2),
+  ...holdFrames(frame3, 2),
+  ...holdFrames(frame5, 2),
+  ...holdFrames(frame7, 2),
+  ...holdFrames(frame9, 2),
+  ...holdFrames(frame11, 2),
+  ...holdFrames(frame13, 2),
+  ...holdFrames(frame15, 2),
+  ...holdFrames(frame0, 2),
+  ...holdFrames(frame19, 2),
+  ...holdFrames(frame21, 2),
+  ...holdFrames(frame23, 2),
+  ...holdFrames(frame25, 3),
   frame28,
   frame29,
   frame30,
@@ -58,10 +55,10 @@ export const logoShineFrames: StaticImageData[] = [
   frame35,
   frame36,
   frame37,
-  ...hold(frame38, 2),
-  ...hold(frame40, 2),
-  ...hold(frame42, 2),
-  ...hold(frame44, 2),
+  ...holdFrames(frame38, 2),
+  ...holdFrames(frame40, 2),
+  ...holdFrames(frame42, 2),
+  ...holdFrames(frame44, 2),
   frame46,
   frame0,
 ];

@@ -1,5 +1,5 @@
 ﻿import type { StaticImageData } from "next/image";
-
+import { holdFrames } from "@/components/home/hold-frames";
 import bigstar1 from "./bigstar1.png";
 import bigstar3 from "./bigstar3.png";
 import bigstar5 from "./bigstar5.png";
@@ -19,34 +19,29 @@ import smallstar14 from "./smallstar14.png";
 import smallstar16 from "./smallstar16.png";
 import smallstar18 from "./smallstar18.png";
 
-function hold(frame: StaticImageData, count: number) {
-  return Array.from({ length: count }, () => frame);
-}
-
 // Source frames 19-35 of the Global Steel shine. The first entry is frame 19.
-// A repeated picture is a hold, stored once.
 export const bigStarFrames: StaticImageData[] = [
-  ...hold(bigstar1, 2),
-  ...hold(bigstar3, 2),
-  ...hold(bigstar5, 2),
-  ...hold(bigstar7, 3),
-  ...hold(bigstar10, 2),
-  ...hold(bigstar12, 2),
-  ...hold(bigstar14, 2),
-  ...hold(bigstar16, 2),
+  ...holdFrames(bigstar1, 2),
+  ...holdFrames(bigstar3, 2),
+  ...holdFrames(bigstar5, 2),
+  ...holdFrames(bigstar7, 3),
+  ...holdFrames(bigstar10, 2),
+  ...holdFrames(bigstar12, 2),
+  ...holdFrames(bigstar14, 2),
+  ...holdFrames(bigstar16, 2),
 ];
 export const bigStarFirstFrame = 19;
 
 // Source frames 29-46. The first entry is frame 29.
 export const smallStarFrames: StaticImageData[] = [
-  ...hold(smallstar1, 2),
-  ...hold(smallstar3, 2),
-  ...hold(smallstar5, 2),
-  ...hold(smallstar7, 3),
-  ...hold(smallstar10, 2),
-  ...hold(smallstar12, 2),
-  ...hold(smallstar14, 2),
-  ...hold(smallstar16, 2),
+  ...holdFrames(smallstar1, 2),
+  ...holdFrames(smallstar3, 2),
+  ...holdFrames(smallstar5, 2),
+  ...holdFrames(smallstar7, 3),
+  ...holdFrames(smallstar10, 2),
+  ...holdFrames(smallstar12, 2),
+  ...holdFrames(smallstar14, 2),
+  ...holdFrames(smallstar16, 2),
   smallstar18,
 ];
 export const smallStarFirstFrame = 29;

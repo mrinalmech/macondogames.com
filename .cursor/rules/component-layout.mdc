@@ -1,0 +1,25 @@
+---
+description: Where shared components and page sections live
+alwaysApply: true
+---
+
+# Component layout
+
+Place a component by who imports it now. When that set of callers changes, move the component and its module in the same change. This applies to existing components as well as new ones.
+
+`src/components/shared` is for a component the layout renders, or one that more than one page imports. `src/components/<page>` is for a component that only that page imports. Nest a component inside the one section that uses it.
+
+```
+src/components/shared/navbar/navbar.tsx
+src/components/home/hero/hero.tsx
+src/components/home/features/steam-widget/steam-widget.tsx
+```
+
+Move it when the callers change:
+
+- A second page starts importing a page section: move it to `shared`.
+- A shared component is left with one page: move it into that page's folder.
+- A page-level component is left with one section: nest it inside that section.
+- A nested component is imported by another section of the same page: lift it to that page's folder.
+
+A CSS module stays beside its component and moves with it.

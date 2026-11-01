@@ -10,10 +10,11 @@ import {
   faXTwitter,
   faYoutube,
 } from "@fortawesome/free-brands-svg-icons";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { isCurrentPage, navLinks } from "@/lib/site";
+import { VcrMark } from "@/components/shared/vcr-mark";
+import { VcrNav } from "@/components/shared/vcr-nav-link";
+import { navLinks } from "@/lib/site";
 import styles from "./footer.module.scss";
 
 config.autoAddCss = false;
@@ -49,21 +50,12 @@ export function Footer({ year }: { year: ReactNode }) {
   return (
     <footer className={`${styles.footer} mt-auto`}>
       <div className={`${styles.group} edge-links`}>
-        <nav aria-label="Footer" className="flex items-center justify-center gap-1">
-          {navLinks.map((link) => {
-            const active = isCurrentPage(pathname, link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="vcr-nav-link"
-                aria-current={active ? "page" : undefined}
-              >
-                <span className="vcr-nav-label">{link.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+        <VcrNav
+          label="Footer"
+          links={navLinks}
+          pathname={pathname}
+          className="flex items-center justify-center gap-1"
+        />
         <ul className={styles.social}>
           {socialLinks.map(({ href, label, icon }) => (
             <li key={href}>
@@ -74,15 +66,7 @@ export function Footer({ year }: { year: ReactNode }) {
                 target="_blank"
                 rel="noreferrer"
               >
-                <span className="vcr-icon-mark">
-                  <span className="vcr-icon-ghost vcr-icon-chroma" aria-hidden="true">
-                    <FontAwesomeIcon icon={icon} />
-                  </span>
-                  <span className="vcr-icon-ghost vcr-icon-signal" aria-hidden="true">
-                    <FontAwesomeIcon icon={icon} />
-                  </span>
-                  <FontAwesomeIcon className="vcr-icon-face" icon={icon} />
-                </span>
+                <VcrMark name="vcr-icon" render={() => <FontAwesomeIcon icon={icon} />} />
               </a>
             </li>
           ))}

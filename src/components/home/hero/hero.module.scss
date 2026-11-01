@@ -2,9 +2,6 @@
 @use "motion" as *;
 @use "tokens" as *;
 
-$frames: 48;
-$duration: math.div($frames, $fps) * 1s;
-
 .shine {
   position: absolute;
   inset: 0;
@@ -17,23 +14,10 @@ $duration: math.div($frames, $fps) * 1s;
   width: 100%;
   height: 100%;
   opacity: 0;
-  animation-delay: calc(var(--i) * 1s / var(--fps));
+  @include frame-delay;
 }
 
-@keyframes logo-shine {
-  0% {
-    opacity: 1;
-    animation-timing-function: step-end;
-  }
-
-  #{math.percentage(math.div(1, $frames))} {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 0;
-  }
-}
+@include frame-hold(logo-shine);
 
 // Opening measured on the 3406×597 monitor. The box covers the clear
 // pixels and the one-pixel soft edge so the frame blends onto the picture.
@@ -196,7 +180,7 @@ $total: $shots * $hold;
 .hero {
   position: relative;
   overflow: hidden;
-  background-image: linear-gradient(to bottom, #000, var(--background));
+  @include cave;
   container-type: size;
   --scale: min(1, calc(100cqw / 810px));
   --l2: min(458px, 50cqw);
@@ -321,7 +305,7 @@ $total: $shots * $hold;
     // Longhands so the per-frame and per-slide delays stay intact.
     .frame {
       animation-name: logo-shine;
-      animation-duration: $duration;
+      animation-duration: $shine-loop;
       animation-iteration-count: infinite;
     }
 
@@ -403,7 +387,7 @@ $total: $shots * $hold;
   gap: calc(42px * var(--type));
   translate: -50% 50%;
   font-family: $vcr-font;
-  letter-spacing: 0.02em;
+  letter-spacing: $vcr-tracking;
   line-height: 1.05;
   color: var(--nav-rest);
   white-space: nowrap;
@@ -428,7 +412,7 @@ $total: $shots * $hold;
 // pitch and leave room beneath the console so both stay readable.
 // Pitch and hold it just below the console. The slogan fits on one line
 // until the column is too narrow, then it breaks between phrases.
-@media (max-width: 40rem) {
+@media (max-width: $compact) {
   .hero {
     --caption-gap: 16px;
     --caption-pad: 28px;
