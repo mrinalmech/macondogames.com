@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import styles from "./perspective-grid.module.scss";
 
 const gap = 56;
@@ -121,8 +121,13 @@ export function PerspectiveGrid() {
   const skyRef = useRef<HTMLDivElement>(null);
   const coverRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  // Home fades once, the first time the grid is shown there. Press fades
+  // only if the grid has not faded in on any page yet.
+  const fadedAnywhere = useRef(false);
+  const fadedOnHome = useRef(false);
+  const committed = useRef<string | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const page = document.querySelector<HTMLElement>("[data-page]");
     const hero = document.querySelector<HTMLElement>("[data-hero]");
     const img = document.querySelector<HTMLImageElement>("[data-bezel]");
@@ -131,24 +136,69 @@ export function PerspectiveGrid() {
     const svg = svgRef.current;
     if (!page || !svg || !sky || !cover) return;
 
-    // The press page has no monitor. The floor still covers the viewport.
-    // A hidden hero must not bring the grid back on its own.
-    if (!hero || !img || hero.getClientRects().length === 0) {
-      if (!document.querySelector("[data-floor]")) return;
+    const showInstant = () => {
+      svg.classList.add(styles.instant);
+      svg.style.visibility = "visible";
+      if (!svg.classList.contains(styles.shown)) svg.classList.add(styles.shown);
+    };
+
+    // Snap to clear, then drop the snap so the next paint can fade up.
+    // A second pass on this visit must not do it again.
+    const fadeIn = (onHome: boolean) => {
+      fadedAnywhere.current = true;
+      if (onHome) fadedOnHome.current = true;
+      svg.classList.add(styles.instant);
+      svg.classList.remove(styles.shown);
+      svg.style.visibility = "visible";
+      void svg.getBoundingClientRect();
+      svg.classList.remove(styles.instant);
+      svg.classList.add(styles.shown);
+    };
+
+    // Other routes keep the floor mounted but hidden, so a return can
+    // show it without playing the fade again.
+    const conceal = () => {
+      svg.style.visibility = "hidden";
+      delete sky.dataset.ready;
+      sky.style.height = "0";
+      cover.style.height = "0";
+    };
+
+    // A cached route can leave a hero or a floor in the document with no
+    // box. Only a visible one gets the grid.
+    const floor = document.querySelector<HTMLElement>("[data-floor]");
+    const onHome = !!hero && !!img && hero.getClientRects().length > 0;
+    const floorVisible = !!floor && floor.getClientRects().length > 0;
+    const onPress = !onHome && floorVisible;
+    if ((onHome && !fadedOnHome.current) || (onPress && !fadedAnywhere.current)) {
+      committed.current = pathname;
+    }
+    // This visit already chose to fade. A second pass must not cancel it.
+    const fadingHere = committed.current === pathname;
+
+    if (!onHome) {
+      if (!onPress) {
+        conceal();
+        return;
+      }
 
       let frame = 0;
       const draw = () => {
         const viewWidth = svg.clientWidth;
         const viewHeight = svg.clientHeight;
         if (viewWidth > 0 && viewHeight > 0) drawGrid(svg, viewWidth, viewHeight);
-        svg.style.visibility = "visible";
-        svg.classList.add(styles.shown);
+        if (fadingHere) {
+          if (!fadedAnywhere.current) fadeIn(false);
+          else svg.style.visibility = "visible";
+        } else showInstant();
       };
       const schedule = () => {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(draw);
       };
 
+      if (!fadingHere) showInstant();
+      else if (fadedAnywhere.current) svg.style.visibility = "visible";
       schedule();
       const observer = new ResizeObserver(schedule);
       observer.observe(svg);
@@ -158,9 +208,7 @@ export function PerspectiveGrid() {
         cancelAnimationFrame(frame);
         observer.disconnect();
         window.removeEventListener("resize", schedule);
-        svg.classList.remove(styles.shown);
-        svg.style.visibility = "hidden";
-        svg.replaceChildren();
+        conceal();
       };
     }
 
@@ -168,11 +216,15 @@ export function PerspectiveGrid() {
     let frame = 0;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    if (!hero || !img) return;
+
+    if (!fadingHere) showInstant();
+    else if (fadedOnHome.current) svg.style.visibility = "visible";
+
     const reveal = () => {
+      if (!fadingHere || fadedOnHome.current) return;
       const intro = hero.getAttribute("data-intro");
-      if (intro === "play" || (reduceMotion && intro === "copy")) {
-        svg.classList.add(styles.shown);
-      }
+      if (intro === "play" || (reduceMotion && intro === "copy")) fadeIn(true);
     };
 
     const introObserver = new MutationObserver(reveal);
@@ -201,7 +253,7 @@ export function PerspectiveGrid() {
       const viewWidth = svg.clientWidth;
       const viewHeight = svg.clientHeight;
       if (viewWidth > 0 && viewHeight > 0) drawGrid(svg, viewWidth, viewHeight);
-      svg.style.visibility = "visible";
+      if (fadedOnHome.current || !fadingHere) svg.style.visibility = "visible";
     };
 
     const schedule = () => {
@@ -230,10 +282,7 @@ export function PerspectiveGrid() {
       window.removeEventListener("resize", schedule);
       introObserver.disconnect();
       delete sky.dataset.ready;
-      svg.classList.remove(styles.shown);
-      svg.style.visibility = "hidden";
-      sky.style.height = "0";
-      cover.style.height = "0";
+      conceal();
     };
   }, [pathname]);
 

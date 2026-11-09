@@ -1,5 +1,6 @@
 import Image from "next/image";
-import holder from "./holder.png";
+import holder from "./holder.webp";
+import screen from "./screen.webp";
 import styles from "./factsheet.module.scss";
 
 const facts = [
@@ -46,8 +47,12 @@ export function Factsheet() {
         src={holder}
         alt=""
         unoptimized
+        preload
+        fetchPriority="high"
+        loading="eager"
         className={styles.bezel}
       />
+      <Image src={screen} alt="" unoptimized className={styles.frame} />
     </aside>
   );
 }

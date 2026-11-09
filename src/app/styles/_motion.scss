@@ -14,6 +14,15 @@ $nav-desktop: 48rem;
 // Feature blurbs and the press kit body.
 $copy-size: 1.375rem;
 
+// Press bezel, 1024×658. The glass is the clear opening. The Steam card
+// slices the same rails.
+$press-bezel-w: 1024;
+$press-bezel-h: 658;
+$press-bezel-left: 61;
+$press-bezel-top: 74;
+$press-bezel-glass-w: 903;
+$press-bezel-glass-h: 510;
+
 // The Global Steel stems lean this far from vertical, top toward the right.
 // A skewed band and a gradient at $shine-angle both follow that slant.
 $shine-slant: 19.3deg;

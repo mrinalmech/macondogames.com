@@ -9,12 +9,19 @@
   }
 
   // Feature titles mark a T and a D. PRESS KIT starts on a P and ends on a T,
-  // so the spark sits on the P's foot and the tip of the T's bar.
+  // so the spark centers sit on the outer corner of the P's foot and the
+  // outer tip of the T's bar.
   [data-letters] {
-    --star-left: 0em;
-    --star-bottom: 0.34em;
-    --star-right: 0.1em;
-    --star-top: 0.15em;
+    --star-left: -0.02em;
+    --star-bottom: 0.2614em;
+    --star-right: -0.0314em;
+    --star-top: 0.067em;
+  }
+
+  .line {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
   }
 }
 

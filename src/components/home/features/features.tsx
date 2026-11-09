@@ -2,19 +2,14 @@
 
 import Image, { type StaticImageData } from "next/image";
 import localFont from "next/font/local";
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { HeldFrames } from "@/components/home/held-frames";
+import { useEffect, useRef } from "react";
+import { ChromeFilters, ChromeLetters } from "@/components/shared/chrome-letters/chrome-letters";
 import enemies from "./enemies.webp";
 import players from "./players.webp";
-import {
-  bigStarFirstFrame,
-  bigStarFrames,
-  smallStarFirstFrame,
-  smallStarFrames,
-} from "../stars/frames";
 import { SteamWidget } from "./steam-widget/steam-widget";
 import upgrades from "./upgrades.webp";
 import styles from "./features.module.scss";
+import chrome from "@/components/shared/chrome-letters/chrome-letters.module.scss";
 
 const commando = localFont({
   src: "./commando.ttf",
@@ -85,53 +80,9 @@ export function Features() {
     return () => observer.disconnect();
   }, []);
 
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    if (!list) return;
-
-    const place = () => {
-      for (const letters of list.querySelectorAll<HTMLElement>("[data-letters]")) {
-        const fill = letters.querySelector<HTMLElement>("[data-fill]");
-        if (!fill) continue;
-        const lines = [...fill.getClientRects()].filter((line) => line.height > 0);
-        if (lines.length < 2) {
-          letters.style.removeProperty("--star-lift");
-          letters.style.removeProperty("--star-drop");
-          letters.style.removeProperty("--star-inset");
-          letters.style.removeProperty("--star-shift");
-          continue;
-        }
-        const bounds = letters.getBoundingClientRect();
-        const first = lines[0];
-        const last = lines[lines.length - 1];
-        const lineBox = bounds.height / lines.length;
-        letters.style.setProperty("--star-lift", `${bounds.height - lineBox}px`);
-        letters.style.setProperty("--star-drop", `${bounds.height - lineBox}px`);
-        letters.style.setProperty("--star-inset", `${Math.max(0, bounds.right - last.right)}px`);
-        letters.style.setProperty("--star-shift", `${first.left - bounds.left}px`);
-      }
-    };
-
-    place();
-    const observer = new ResizeObserver(place);
-    for (const letters of list.querySelectorAll("[data-letters]")) observer.observe(letters);
-    let cancelled = false;
-    document.fonts.ready.then(() => {
-      if (!cancelled) place();
-    });
-    return () => {
-      cancelled = true;
-      observer.disconnect();
-    };
-  }, []);
-
   return (
     <section className={`${styles.features} ${commando.variable}`}>
-      <svg className={styles.edgeFilter} aria-hidden="true">
-        <filter id="feature-heading-smooth" x="-5%" y="-25%" width="110%" height="150%">
-          <feGaussianBlur stdDeviation="0.55 0.08" />
-        </filter>
-      </svg>
+      <ChromeFilters />
       <div className={styles.inner}>
         <div className={styles.widget}>
           <SteamWidget />
@@ -154,37 +105,10 @@ export function Features() {
               </div>
               <div className={styles.copy}>
                 <h2
-                  className={styles.heading}
+                  className={chrome.heading}
                   {...(feature.title === "AND THE UPGRADES" ? { "data-corners": "as" } : {})}
                 >
-                  <span className={styles.letters} data-letters>
-                    <span className={styles.plate}>
-                      {(["depth", "shade", "lip", "fill", "sheen"] as const).map((layer) => (
-                        <span
-                          key={layer}
-                          className={styles[layer]}
-                          aria-hidden={layer === "fill" ? undefined : true}
-                          {...(layer === "fill" ? { "data-fill": true } : {})}
-                        >
-                          {feature.title}
-                        </span>
-                      ))}
-                    </span>
-                    <span className={styles.bigStar} aria-hidden="true">
-                      <HeldFrames
-                        frames={bigStarFrames}
-                        first={bigStarFirstFrame}
-                        className={styles.starFrame}
-                      />
-                    </span>
-                    <span className={styles.smallStar} aria-hidden="true">
-                      <HeldFrames
-                        frames={smallStarFrames}
-                        first={smallStarFirstFrame}
-                        className={styles.starFrame}
-                      />
-                    </span>
-                  </span>
+                  <ChromeLetters text={feature.title} />
                 </h2>
                 <p className={styles.body}>{feature.copy}</p>
               </div>

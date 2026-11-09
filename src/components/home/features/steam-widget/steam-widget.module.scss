@@ -1,27 +1,108 @@
+@use "sass:math";
 @use "motion" as *;
 
-// Same treatment as macondogames.com: a 190px frame and a 168px card
-// placeholder. The page sets color-scheme: dark, which paints this
-// iframe's transparent canvas white, so the frame opts back out.
-// The glint uses the shared shine timing.
-.slot {
+// The frame sits just over the widget's 1px border. The source rail's inner
+// pixel is a soft dark fringe, so the slice leaves it out and the metal edge
+// stays solid. The green purchase bar hangs off the card inside the same
+// iframe, so the front rail is opened there. The cut piece sits behind the
+// widget and completes the rail until the bar covers it. The page sets
+// color-scheme: dark, which paints this iframe's transparent canvas white,
+// so the frame opts back out.
+$lip: 2;
+$slice-top: $press-bezel-top - $lip;
+$slice-right: $press-bezel-w - $press-bezel-left - $press-bezel-glass-w - $lip;
+$slice-bottom: $press-bezel-h - $press-bezel-top - $press-bezel-glass-h - $lip;
+$slice-left: $press-bezel-left - $lip;
+$card-w: 646px;
+$card-h: 166px;
+$glass-w: 646px;
+$glass-h: 190px;
+$cover: 2px;
+$edge-top: 30px;
+$edge-right: 24px;
+$edge-bottom: 30px;
+$edge-left: 24px;
+$frame-w: $card-w + $edge-left + $edge-right - (2 * $cover);
+$frame-h: $card-h + $edge-top + $edge-bottom - (2 * $cover);
+// Purchase bar, measured inside the 646×190 iframe.
+$bar-left: 212px;
+$bar-right: 636px;
+$bar-bottom: 187px;
+$notch-left: ($edge-left - $cover) + $bar-left;
+$notch-right: ($edge-left - $cover) + $bar-right;
+$notch-top: $frame-h - $edge-bottom - 2px;
+$notch-bottom: ($edge-top - $cover) + $bar-bottom;
+
+.fit {
+  container-type: inline-size;
   position: relative;
-  width: 100%;
-  max-width: 646px;
-  height: 190px;
+  width: min(#{$frame-w}, 100%);
   margin-inline: auto;
+  aspect-ratio: calc(#{$frame-w} / #{$frame-h});
+  overflow: hidden;
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $frame-w;
+  height: $frame-h;
+  transform: scale(calc(100cqw / #{$frame-w}));
+  transform-origin: top left;
+}
+
+.bezel {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  border-style: solid;
+  border-color: transparent;
+  border-width: $edge-top $edge-right $edge-bottom $edge-left;
+  border-image-source: url("./bezel.png");
+  border-image-slice: $slice-top $slice-right $slice-bottom $slice-left;
+  border-image-width: $edge-top $edge-right $edge-bottom $edge-left;
+  border-image-repeat: stretch;
+}
+
+.bezelBack {
+  z-index: 1;
+  // Tucked a couple of pixels under the front rail so the join does not read.
+  clip-path: inset(
+    #{$notch-top - 2px}
+    #{$frame-w - $notch-right - 2px}
+    #{$frame-h - $notch-bottom}
+    #{$notch-left - 2px}
+  );
+}
+
+.bezelFront {
+  z-index: 3;
+  clip-path: path(
+    evenodd,
+    "M0 0H#{math.div($frame-w, 1px)}V#{math.div($frame-h, 1px)}H0ZM#{math.div($notch-left, 1px)} #{math.div($notch-top, 1px)}H#{math.div($notch-right, 1px)}V#{math.div($notch-bottom, 1px)}H#{math.div($notch-left, 1px)}Z"
+  );
+}
+
+.glass {
+  position: absolute;
+  z-index: 2;
+  left: $edge-left - $cover;
+  top: $edge-top - $cover;
+  width: $glass-w;
+  height: $glass-h;
 }
 
 .ghost {
   position: absolute;
-  z-index: 10;
-  top: 0;
-  left: 0;
+  z-index: 0;
+  top: $edge-top - $cover;
+  left: $edge-left - $cover;
   box-sizing: border-box;
-  width: 100%;
-  height: 168px;
-  background: #282e39;
-  border: 1px solid #2d3139;
+  width: $glass-w;
+  height: $card-h;
+  background: linear-gradient(130deg, #3b4351, #282e39);
   overflow: hidden;
   transition: opacity 1s ease;
 
@@ -79,23 +160,6 @@
 }
 
 @include shine-keyframes(steam-chrome);
-
-@media screen and (max-width: 420px) {
-  .slot {
-    width: auto;
-    max-width: none;
-    height: 200px;
-    margin-left: -15px;
-    margin-right: -15px;
-  }
-}
-
-@media screen and (max-width: 380px) {
-  .slot {
-    margin-left: -18px;
-    margin-right: -18px;
-  }
-}
 
 @media (scripting: none) {
   .ghost {

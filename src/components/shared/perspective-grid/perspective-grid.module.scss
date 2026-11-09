@@ -43,6 +43,11 @@ $grid-glow: 6s;
   opacity: 0;
   transition: opacity $intro ease;
 
+  // Coming back shows the floor at full strength. The first arrival fades.
+  &.instant {
+    transition: none;
+  }
+
   &.shown {
     opacity: 1;
     animation: grid-glow $grid-glow ease-in-out infinite;

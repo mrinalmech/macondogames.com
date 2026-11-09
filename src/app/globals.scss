@@ -2,5 +2,7 @@
 @use "styles/vcr-nav";
 
 // The .css suffix makes Sass emit this as a plain CSS import. The Tailwind
-// loader expands it after Sass compiles the partials.
+// loader expands it after Sass compiles the partials. Turbopack rebuilds this
+// entry, not a partial it @uses, so a partial edit stays cached until this
+// file changes.
 @import "tailwindcss/index.css";

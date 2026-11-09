@@ -3,7 +3,12 @@
 
 .body {
   min-width: 0;
+  // The document face is set in a Sass partial. Turbopack serves the cached
+  // entry until that entry file itself changes, so this copy sets the face.
+  font-family: $vcr-font;
   font-size: $copy-size;
+  letter-spacing: $vcr-tracking;
+  -webkit-font-smoothing: none;
 
   p {
     margin: 0.8rem 0 0;
@@ -21,6 +26,38 @@
   line-height: 1;
   text-transform: uppercase;
   -webkit-font-smoothing: none;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1.5rem;
+}
+
+.download {
+  display: inline-block;
+  padding: 0.4rem 0.75rem 0.3rem;
+  border: 2px solid $signal;
+  color: $signal;
+  font-family: $vcr-font;
+  font-size: 1.2rem;
+  letter-spacing: $vcr-tracking;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  -webkit-font-smoothing: none;
+
+  &:hover {
+    border-color: $nav-hover;
+    color: $nav-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $signal;
+    outline-offset: 3px;
+  }
 }
 
 .section + .section {
@@ -50,14 +87,33 @@
 }
 
 .shot {
+  position: relative;
   display: block;
-  background: #000;
+}
 
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
+// The shot is cropped to the glass, so it stays inside the bezel.
+.screen {
+  position: absolute;
+  z-index: 0;
+  left: calc(#{$press-bezel-left} / #{$press-bezel-w} * 100%);
+  top: calc(#{$press-bezel-top} / #{$press-bezel-h} * 100%);
+  width: calc(#{$press-bezel-glass-w} / #{$press-bezel-w} * 100%);
+  height: calc(#{$press-bezel-glass-h} / #{$press-bezel-h} * 100%);
+  overflow: hidden;
+  background: #000;
+}
+
+.picture {
+  object-fit: cover;
+}
+
+.bezel {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
 }
 
 .logos {
