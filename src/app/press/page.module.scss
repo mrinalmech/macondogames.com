@@ -18,7 +18,7 @@
   min-width: 0;
 }
 
-@media (min-width: $nav-desktop) {
+@media (min-width: $press-columns) {
   .layout {
     grid-template-columns: auto minmax(0, 1fr);
     column-gap: 2.75rem;

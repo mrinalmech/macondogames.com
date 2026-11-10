@@ -11,7 +11,9 @@ $header-block: 102px;
 // Caption stacks, and the feature band's top padding tightens.
 $compact: 40rem;
 $nav-desktop: 48rem;
-// Feature blurbs and the press kit body.
+// The factsheet sits beside the kit. The nav stays at $nav-desktop.
+$press-columns: 40rem;
+// Feature blurbs, the press kit body, and factsheet values at the full tube.
 $copy-size: 1.375rem;
 
 // Press bezel, 1024×658. The glass is the clear opening. The Steam card

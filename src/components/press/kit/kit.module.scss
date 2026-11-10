@@ -1,5 +1,13 @@
+@use "sass:math";
 @use "motion" as *;
 @use "tokens" as *;
+
+// The files include clear space. The frame is the ink, so a narrow column
+// scales the artwork and the stacked marks share a left edge.
+$logo-file-h: 13rem;
+$game-ink-w: math.div($logo-file-h * 1312, 752);
+$game-ink-h: math.div($logo-file-h * 514, 752);
+$company-ink-w: math.div($game-ink-h * 464, 541);
 
 .body {
   min-width: 0;
@@ -86,6 +94,10 @@
   gap: 0.75rem;
 }
 
+// Pair the monitors once each glass can show the scene. The factsheet
+// takes its column at 48rem, and two shots there shrink to specks.
+$shots-pair: 68rem;
+
 .shot {
   position: relative;
   display: block;
@@ -119,24 +131,58 @@
 .logos {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
   align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
 }
 
 .logo {
   display: block;
-  width: fit-content;
+  flex: none;
+  max-width: 100%;
+}
+
+.company {
+  width: min(100%, #{$company-ink-w});
+}
+
+.game {
+  width: min(100%, #{$game-ink-w});
+}
+
+.frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+
+.company .frame {
+  aspect-ratio: 464 / 541;
+}
+
+.game .frame {
+  aspect-ratio: 1312 / 514;
+}
+
+.companyLogo,
+.gameLogo {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
 }
 
 .companyLogo {
-  // Ink is 541 of 567 pixels. Global Steel ink is 530 of 752, at 13rem tall.
-  width: calc(13rem * 530 / 752 * 567 / 541);
-  height: auto;
+  width: calc(100% * 567 / 464);
+  left: calc(100% * -51 / 464);
+  top: calc(100% * -13 / 541);
 }
 
 .gameLogo {
-  width: auto;
-  height: 13rem;
+  width: calc(100% * 1610 / 1312);
+  left: calc(100% * -145 / 1312);
+  top: calc(100% * -122 / 514);
 }
 
 .shot:focus-visible,
@@ -145,7 +191,7 @@
   outline-offset: 3px;
 }
 
-@media (min-width: $nav-desktop) {
+@media (min-width: $shots-pair) {
   .shots {
     grid-template-columns: 1fr 1fr;
   }

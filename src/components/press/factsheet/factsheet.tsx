@@ -11,8 +11,21 @@ const facts = [
   { label: "Press", value: "press@macondogames.com", href: "mailto:press@macondogames.com" },
 ];
 
+function FactText({ value }: { value: string }) {
+  const at = value.indexOf("@");
+  if (at === -1) return value;
+  return (
+    <>
+      {value.slice(0, at + 1)}
+      <wbr />
+      {value.slice(at + 1)}
+    </>
+  );
+}
+
 function FactValue({ value, href }: { value: string; href?: string }) {
-  if (!href) return value;
+  const text = <FactText value={value} />;
+  if (!href) return text;
 
   const external = href.startsWith("http");
 
@@ -22,7 +35,7 @@ function FactValue({ value, href }: { value: string; href?: string }) {
       href={href}
       {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
     >
-      {value}
+      {text}
     </a>
   );
 }

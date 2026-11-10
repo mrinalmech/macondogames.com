@@ -214,9 +214,9 @@ export function Hero() {
             <span>LEVEL UP.</span>
           </p>
           <p className={styles.blurb}>
-            Global Steel is a 2D run-and-gun video game inspired by{" "}
-            <br />
-            Saturday-morning cartoons of the 80s.
+            Global Steel is a 2D run-and-gun platformer inspired by <br />
+            1980s Saturday-morning cartoons like Centurions and M.A.S.K., <br />
+            and by arcade shooters like Contra.
           </p>
         </div>
       </div>

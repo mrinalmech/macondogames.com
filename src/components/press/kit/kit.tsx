@@ -4,10 +4,10 @@ import monitor from "./monitor.webp";
 import styles from "./kit.module.scss";
 
 const features = [
-  "Swap between three distinct characters—Stormhammer, Nightblade, and Valkyrie—each with unique weapons and playstyles.",
+  "Swap between Stormhammer, Nightblade, and Valkyrie, each with their own weapons and playstyle.",
   "Classic hand-drawn animation featuring frame-by-frame artwork that captures the iconic aesthetic of '80s Saturday-morning cartoons.",
-  "Battle across a globe-trotting campaign filled with a variety of enemies and bosses.",
-  "Unlock new weapons and gear upgrades with earned points to alter your approach to combat.",
+  "Battle across a globe-trotting campaign filled with a variety of bosses and enemies.",
+  "Earn points to unlock new weapons and gear upgrades that change up your gameplay.",
   "Authentic '80s cartoon tropes, including an era-appropriate soundtrack complete with a custom theme song.",
 ];
 
@@ -17,8 +17,9 @@ export function Kit() {
       <section className={styles.section} id="description">
         <h2 className={styles.heading}>Description</h2>
         <p>
-        Global Steel is a 2D run-and-gun platformer inspired by 1980s Saturday-morning cartoons like Centurions and M.A.S.K. and classic arcade shooters like Contra. 
-        Each level plays out like a &quot;lost episode&quot; of an unreleased show from the time period.
+          Global Steel is a 2D run-and-gun platformer inspired by 1980s Saturday-morning
+          cartoons like Centurions and M.A.S.K., and by arcade shooters like Contra. Each
+          level plays out like a &quot;lost episode&quot; of an unreleased show from the time.
         </p>
       </section>
 
@@ -76,25 +77,29 @@ export function Kit() {
           </a>
         </div>
         <div className={styles.logos}>
-          <a className={styles.logo} href={companyLogo.src} target="_blank" rel="noreferrer">
-            <Image
-              src={companyLogo.src}
-              alt={companyLogo.alt}
-              width={companyLogo.width}
-              height={companyLogo.height}
-              className={styles.companyLogo}
-              sizes="13rem"
-            />
+          <a className={`${styles.logo} ${styles.company}`} href={companyLogo.src} target="_blank" rel="noreferrer">
+            <span className={styles.frame}>
+              <Image
+                src={companyLogo.src}
+                alt={companyLogo.alt}
+                width={companyLogo.width}
+                height={companyLogo.height}
+                className={styles.companyLogo}
+                sizes="8rem"
+              />
+            </span>
           </a>
-          <a className={styles.logo} href={gameLogo.src} target="_blank" rel="noreferrer">
-            <Image
-              src={gameLogo.src}
-              alt={gameLogo.alt}
-              width={gameLogo.width}
-              height={gameLogo.height}
-              className={styles.gameLogo}
-              sizes="28rem"
-            />
+          <a className={`${styles.logo} ${styles.game}`} href={gameLogo.src} target="_blank" rel="noreferrer">
+            <span className={styles.frame}>
+              <Image
+                src={gameLogo.src}
+                alt={gameLogo.alt}
+                width={gameLogo.width}
+                height={gameLogo.height}
+                className={styles.gameLogo}
+                sizes="23rem"
+              />
+            </span>
           </a>
         </div>
       </section>

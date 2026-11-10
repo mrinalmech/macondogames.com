@@ -405,8 +405,8 @@ $total: $shots * $hold;
   .hero {
     --caption-gap: 16px;
     --caption-pad: 28px;
-    // Wrapped slogan, plus up to three blurb lines.
-    --stacked-caption: 128px;
+    // Slogan, plus the blurb at five lines on a narrow phone.
+    --stacked-caption: 167px;
     --caption-fit: calc(
       var(--wall-h) - var(--tuck) + (597px - var(--bezel-lip)) * var(--scale) +
         var(--caption-gap) + var(--stacked-caption) + var(--caption-pad)
@@ -447,16 +447,16 @@ $total: $shots * $hold;
   }
 }
 
-// A one-line slogan does not need the wrapped block, so the widget can sit closer.
+// The slogan stays on one line from here, and the blurb wraps to fewer lines.
 @media (min-width: 20.5rem) and (max-width: 40rem) {
   .hero {
     --caption-pad: 12px;
-    --stacked-caption: 108px;
+    --stacked-caption: 144px;
   }
 }
 
 @media (min-width: 24.5rem) and (max-width: 40rem) {
   .hero {
-    --stacked-caption: 84px;
+    --stacked-caption: 121px;
   }
 }

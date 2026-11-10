@@ -27,21 +27,21 @@ const features: {
 }[] = [
   {
     title: "THE GOOD",
-    copy: "Control three different characters with varying playstyles for maximum replayability.",
+    copy: "Swap between Stormhammer, Nightblade, and Valkyrie, each with their own weapons and playstyle.",
     image: players,
     alt: "Three figures leaping into action - one in blue, one in red and one in green.",
     from: "left",
   },
   {
     title: "THE BAD",
-    copy: "Travel through an assortment of locations fighting a number of bosses and enemies.",
+    copy: "Battle across a globe-trotting campaign filled with a variety of bosses and enemies.",
     image: enemies,
     alt: "Four figures in a menacing pose, holding their weapons aloft.",
     from: "right",
   },
   {
     title: "AND THE UPGRADES",
-    copy: "Earn points and customize your weaponry to switch up gameplay.",
+    copy: "Earn points to unlock new weapons and gear upgrades that change up your gameplay.",
     image: upgrades,
     alt: "Three different guns, disassembled so you can see their interiors.",
     from: "left",
