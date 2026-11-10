@@ -1,0 +1,39 @@
+// The monitor pictures take a heavier glass than text on a screen.
+$tube-scan: 0.28;
+$tube-scan-quiet: 0.07;
+$tube-vignette: 0.5;
+$tube-vignette-quiet: 0.22;
+
+@mixin tube-panes {
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &::before {
+    z-index: 1;
+  }
+
+  &::after {
+    z-index: 2;
+  }
+}
+
+@function tube-scanlines($alpha) {
+  @return repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, $alpha) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+@function tube-vignette($alpha, $clear: 42%) {
+  @return radial-gradient(
+    ellipse at center,
+    transparent $clear,
+    rgba(0, 0, 0, $alpha) 100%
+  );
+}

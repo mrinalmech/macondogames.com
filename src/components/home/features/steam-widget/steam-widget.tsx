@@ -7,7 +7,7 @@ const widgetUrl = "https://store.steampowered.com/widget/1073970/";
 const widgetTitle = "Global Steel on Steam";
 
 // Share of the grey card that must sit in the viewport before Steam loads.
-// 40% of the 168px placeholder is about 67px: past a peeking edge, and early
+// 40% of the 166px placeholder is about 66px: past a peeking edge, and early
 // enough that the iframe is requested before the card is the focus.
 const placeholderShown = 0.4;
 
@@ -49,26 +49,32 @@ export function SteamWidget() {
   const visible = active || !canDefer;
 
   return (
-    <div className={styles.slot}>
-      <div
-        ref={placeholderRef}
-        className={ready ? `${styles.ghost} ${styles.ghostOut}` : styles.ghost}
-      />
-      {visible ? (
-        <iframe
-          className={ready ? `${styles.frame} ${styles.frameIn}` : styles.frame}
-          src={widgetUrl}
-          title={widgetTitle}
-          onLoad={() => setReady(true)}
+    <div className={styles.fit}>
+      <div className={styles.stage}>
+        <div
+          ref={placeholderRef}
+          className={ready ? `${styles.ghost} ${styles.ghostOut}` : styles.ghost}
         />
-      ) : null}
-      <noscript>
-        <iframe
-          className={styles.frameStatic}
-          src={widgetUrl}
-          title={widgetTitle}
-        />
-      </noscript>
+        <div className={`${styles.bezel} ${styles.bezelBack}`} aria-hidden="true" />
+        <div className={styles.glass}>
+          {visible ? (
+            <iframe
+              className={ready ? `${styles.frame} ${styles.frameIn}` : styles.frame}
+              src={widgetUrl}
+              title={widgetTitle}
+              onLoad={() => setReady(true)}
+            />
+          ) : null}
+          <noscript>
+            <iframe
+              className={styles.frameStatic}
+              src={widgetUrl}
+              title={widgetTitle}
+            />
+          </noscript>
+        </div>
+        <div className={`${styles.bezel} ${styles.bezelFront}`} aria-hidden="true" />
+      </div>
     </div>
   );
 }

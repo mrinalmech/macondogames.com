@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, VT323 } from "next/font/google";
+import { VT323 } from "next/font/google";
 import { Suspense } from "react";
 import { CopyrightYear, YearFallback } from "@/components/shared/footer/copyright-year";
 import { Footer } from "@/components/shared/footer/footer";
@@ -7,11 +7,6 @@ import { Navbar } from "@/components/shared/navbar/navbar";
 import { PerspectiveGrid } from "@/components/shared/perspective-grid/perspective-grid";
 import { site } from "@/lib/site";
 import "./globals.scss";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const vcr = VT323({
   weight: "400",
@@ -31,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${vcr.variable} antialiased`}
+      className={vcr.variable}
     >
       <body className="min-h-dvh">
         <div data-page className="relative flex min-h-dvh flex-col">

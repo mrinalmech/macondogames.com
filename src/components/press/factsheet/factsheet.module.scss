@@ -1,0 +1,134 @@
+@use "sass:math";
+@use "tokens" as *;
+@use "motion" as *;
+@use "tube" as *;
+
+// Interior sizes are a share of the tube, matching the 18rem factsheet.
+@function tube-size($size) {
+  @return math.div($size, 18rem) * 100cqi;
+}
+
+.holder {
+  position: relative;
+  container-type: inline-size;
+  width: min(18rem, 100%);
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+// The full tube fits again once the nav is desktop. Between these two
+// widths the pair is on and an 18rem tube would squeeze the kit.
+@media (min-width: $press-columns) {
+  .holder {
+    width: 15rem;
+  }
+}
+
+@media (min-width: $nav-desktop) {
+  .holder {
+    width: 18rem;
+  }
+}
+
+.bezel {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+// The rails are one transparent sheet, aligned to the holder canvas.
+.frame {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+// Opening measured on the 502×1024 holder. The box covers the clear
+// pixels and the one-pixel soft edge so the frame blends onto the text.
+.screen {
+  position: absolute;
+  z-index: 0;
+  left: calc(39 / 502 * 100%);
+  top: calc(36 / 1024 * 100%);
+  width: calc(420 / 502 * 100%);
+  height: calc(846 / 1024 * 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: tube-size(1.35rem) tube-size(0.9rem);
+  overflow: hidden;
+  background: #0a242c;
+  @include tube-panes;
+
+  &::after {
+    background:
+      tube-scanlines($tube-scan-quiet),
+      tube-vignette($tube-vignette-quiet);
+  }
+}
+
+.heading {
+  margin: 0;
+  color: $signal;
+  font-family: $vcr-font;
+  font-size: tube-size(1.6rem);
+  font-weight: 400;
+  letter-spacing: $vcr-tracking;
+  line-height: 1;
+  text-transform: uppercase;
+  -webkit-font-smoothing: none;
+}
+
+.facts {
+  display: grid;
+  gap: tube-size(0.85rem);
+  margin: tube-size(1.1rem) 0 0;
+}
+
+.fact {
+  display: grid;
+  gap: tube-size(0.15rem);
+
+  dt {
+    color: $signal;
+    font-family: $vcr-font;
+    font-size: tube-size(1.15rem);
+    letter-spacing: $vcr-tracking;
+    line-height: 1;
+    -webkit-font-smoothing: none;
+  }
+
+  dd {
+    margin: 0;
+    // Same as the kit body: this value cannot inherit the cached document face.
+    font-family: $vcr-font;
+    font-size: tube-size($copy-size);
+    letter-spacing: $vcr-tracking;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: none;
+  }
+}
+
+.link {
+  color: $signal;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+
+  &:hover {
+    color: $nav-hover;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $signal;
+    outline-offset: 3px;
+  }
+}

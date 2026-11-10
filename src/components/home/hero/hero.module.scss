@@ -1,6 +1,7 @@
 @use "sass:math";
 @use "motion" as *;
 @use "tokens" as *;
+@use "tube" as *;
 
 .shine {
   position: absolute;
@@ -54,17 +55,10 @@
   width: 617px;
   height: 278px;
 
-  &::before,
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
+  @include tube-panes;
 
   // Glass sheen rolling down the tube.
   &::before {
-    z-index: 1;
     background: linear-gradient(
       to bottom,
       transparent 0%,
@@ -78,20 +72,15 @@
 
   // Scanlines, phosphor grille, and the darkened tube edges.
   &::after {
-    z-index: 2;
     background:
-      repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.28) 0 1px,
-        transparent 1px 3px
-      ),
+      tube-scanlines($tube-scan),
       repeating-linear-gradient(
         to right,
         rgba(255, 40, 40, 0.07) 0 1px,
         rgba(40, 255, 80, 0.05) 1px 2px,
         rgba(40, 80, 255, 0.07) 2px 3px
       ),
-      radial-gradient(ellipse at center, transparent 42%, rgba(0, 0, 0, 0.5) 100%);
+      tube-vignette($tube-vignette);
     box-shadow:
       inset 0 0 18px rgba(0, 0, 0, 0.45),
       inset 3px 0 0 rgba(255, 40, 80, 0.18),
@@ -416,8 +405,8 @@ $total: $shots * $hold;
   .hero {
     --caption-gap: 16px;
     --caption-pad: 28px;
-    // Wrapped slogan, plus up to three blurb lines.
-    --stacked-caption: 128px;
+    // Slogan, plus the blurb at five lines on a narrow phone.
+    --stacked-caption: 167px;
     --caption-fit: calc(
       var(--wall-h) - var(--tuck) + (597px - var(--bezel-lip)) * var(--scale) +
         var(--caption-gap) + var(--stacked-caption) + var(--caption-pad)
@@ -458,16 +447,16 @@ $total: $shots * $hold;
   }
 }
 
-// A one-line slogan does not need the wrapped block, so the widget can sit closer.
+// The slogan stays on one line from here, and the blurb wraps to fewer lines.
 @media (min-width: 20.5rem) and (max-width: 40rem) {
   .hero {
     --caption-pad: 12px;
-    --stacked-caption: 108px;
+    --stacked-caption: 144px;
   }
 }
 
 @media (min-width: 24.5rem) and (max-width: 40rem) {
   .hero {
-    --stacked-caption: 84px;
+    --stacked-caption: 121px;
   }
 }

@@ -6,6 +6,7 @@ import {
   faDiscord,
   faFacebookF,
   faInstagram,
+  faSteam,
   faTwitch,
   faXTwitter,
   faYoutube,
@@ -20,6 +21,11 @@ import styles from "./footer.module.scss";
 config.autoAddCss = false;
 
 const socialLinks = [
+  {
+    href: "https://store.steampowered.com/app/1073970/",
+    label: "Steam",
+    icon: faSteam,
+  },
   { href: "https://x.com/macondogames_in", label: "X", icon: faXTwitter },
   {
     href: "https://www.facebook.com/macondostudios",

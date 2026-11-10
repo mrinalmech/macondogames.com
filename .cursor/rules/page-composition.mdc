@@ -1,0 +1,30 @@
+---
+description: A page composes its sections instead of wrapping them in one component
+alwaysApply: true
+---
+
+# Page composition
+
+A route's `page.tsx` imports that page's sections and places them. The page owns the shell that arranges those sections, including its module.
+
+```tsx
+export default function PressPage() {
+  return (
+    <main className="flex flex-1 flex-col">
+      <article className={styles.page}>
+        <div className={styles.inner}>
+          <PressTitle />
+          <div className={styles.layout}>
+            <Factsheet />
+            <Kit />
+          </div>
+        </div>
+      </article>
+    </main>
+  );
+}
+```
+
+Name a section for what it is (`hero`, `factsheet`, `kit`) and keep its module beside it. The home page is the same shape: `page.tsx` imports `Hero` and `Features`.
+
+The page is the only place that assembles the whole route.
