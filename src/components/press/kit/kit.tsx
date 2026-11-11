@@ -77,6 +77,7 @@ export function Kit() {
           </a>
         </div>
         <div className={styles.logos}>
+          {/* sizes is the image box. The frame crops the file's clear space, so the bitmap is wider than the ink. */}
           <a className={`${styles.logo} ${styles.company}`} href={companyLogo.src} target="_blank" rel="noreferrer">
             <span className={styles.frame}>
               <Image
@@ -85,7 +86,8 @@ export function Kit() {
                 width={companyLogo.width}
                 height={companyLogo.height}
                 className={styles.companyLogo}
-                sizes="8rem"
+                quality={90}
+                sizes="9.32rem"
               />
             </span>
           </a>
@@ -97,7 +99,8 @@ export function Kit() {
                 width={gameLogo.width}
                 height={gameLogo.height}
                 className={styles.gameLogo}
-                sizes="23rem"
+                quality={90}
+                sizes="27.84rem"
               />
             </span>
           </a>

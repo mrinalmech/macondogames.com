@@ -14,6 +14,11 @@ const sassLoader = {
 };
 
 const nextConfig: NextConfig = {
+  images: {
+    // Logos ask for 90. The default list is only 75, and the optimizer
+    // rejects a quality that is not listed here.
+    qualities: [75, 90],
+  },
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {

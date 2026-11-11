@@ -3,13 +3,18 @@
 @use "tokens" as *;
 
 // The files include clear space. The frame is the ink, so a narrow column
-// scales the artwork and the stacked marks share a left edge.
+// scales the artwork. Side by side, the marks stay on the text edge. Stacked,
+// each mark centers on the column.
 $logo-file-h: 13rem;
+$logo-gap: 3.5rem;
+$logo-stack-gap: 2rem;
 $game-ink-w: math.div($logo-file-h * 1312, 752);
 $game-ink-h: math.div($logo-file-h * 514, 752);
 $company-ink-w: math.div($game-ink-h * 464, 541);
+$logo-row: $company-ink-w + $logo-gap + $game-ink-w;
 
 .body {
+  container: kit / inline-size;
   min-width: 0;
   // The document face is set in a Sass partial. Turbopack serves the cached
   // entry until that entry file itself changes, so this copy sets the face.
@@ -133,7 +138,16 @@ $shots-pair: 68rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.5rem;
+  column-gap: $logo-gap;
+  row-gap: $logo-stack-gap;
+}
+
+// Center only once the pair has wrapped. A wide column keeps the row on the
+// same left edge as the headings.
+@container kit (max-width: #{$logo-row - 0.0625rem}) {
+  .logos {
+    justify-content: center;
+  }
 }
 
 .logo {
