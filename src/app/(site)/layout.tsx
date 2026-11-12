@@ -6,7 +6,8 @@ import { Footer } from "@/components/shared/footer/footer";
 import { Navbar } from "@/components/shared/navbar/navbar";
 import { PerspectiveGrid } from "@/components/shared/perspective-grid/perspective-grid";
 import { site } from "@/lib/site";
-import "./globals.scss";
+import { SanityLive } from "@/sanity/lib/live";
+import "../globals.scss";
 
 const vcr = VT323({
   weight: "400",
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             }
           />
         </div>
+        <SanityLive includeDrafts={false} />
       </body>
     </html>
   );

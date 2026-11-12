@@ -1,0 +1,30 @@
+@use "motion" as *;
+
+.title {
+  margin-bottom: $chrome-title-gap;
+  text-align: center;
+
+  h1 {
+    font-size: min($chrome-title-size, calc((100vw - $chrome-title-gutter) / $chrome-title-fit));
+  }
+
+  // BLOG starts on a B and ends on a G. The spark centers sit on the outer
+  // corner of the B's foot and the upper tip of the G.
+  [data-letters] {
+    --star-left: -0.0383em;
+    --star-bottom: 0.2431em;
+    --star-right: -0.0058em;
+    --star-top: 0.0958em;
+  }
+
+  .line {
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
+.bigStar,
+.smallStar {
+  scale: $chrome-star-scale;
+}

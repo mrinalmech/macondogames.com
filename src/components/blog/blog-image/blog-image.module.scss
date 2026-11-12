@@ -1,0 +1,12 @@
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// These GIFs flag white as the transparent color. The holes are the whites
+// (the eyes, the highlights). The page behind them is navy, so they paint
+// black. The file's own background is white.
+.gif {
+  background-color: #fff;
+}
