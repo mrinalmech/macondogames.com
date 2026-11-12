@@ -34,3 +34,16 @@ jobs:
             .
           docker push "$IMAGE:${{ github.sha }}"
           docker push "$IMAGE:latest"
+
+      - name: Roll out the service
+        env:
+          SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          IMAGE: ${{ steps.ecr.outputs.registry }}/macondogames:${{ github.sha }}
+        run: |
+          aws ecs update-express-gateway-service \
+            --region ap-south-1 \
+            --service-arn arn:aws:ecs:ap-south-1:761097097259:service/default/macondogames \
+            --primary-container "$(jq -n \
+              --arg image "$IMAGE" \
+              --arg token "$SANITY_API_READ_TOKEN" \
+              '{image:$image,containerPort:3000,environment:[{name:"SANITY_API_READ_TOKEN",value:$token}]}')"
