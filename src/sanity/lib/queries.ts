@@ -48,3 +48,8 @@ export const postQuery = `*[_type == "post" && slug.current == $slug][0] {
 export const postSlugsQuery = `*[_type == "post" && defined(slug.current)] {
   "slug": slug.current
 }`;
+
+export const sitemapPostsQuery = `*[_type == "post" && defined(slug.current)] {
+  "slug": slug.current,
+  "updatedAt": _updatedAt
+}`;
