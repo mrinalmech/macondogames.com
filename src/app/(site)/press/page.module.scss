@@ -1,7 +1,7 @@
 @use "motion" as *;
 
 .page {
-  padding: calc(var(--header-block) + 1.75rem) 1.25rem 4.5rem;
+  padding: calc(var(--header-block) + $page-inset-top) $page-inset-x $page-inset-bottom;
 }
 
 .inner {

@@ -1,0 +1,11 @@
+@use "motion" as *;
+
+.page {
+  padding: calc(var(--header-block) + $page-inset-top) $page-inset-x $page-inset-bottom;
+}
+
+.inner {
+  max-width: $blog-measure;
+  margin-inline: auto;
+  min-width: 0;
+}

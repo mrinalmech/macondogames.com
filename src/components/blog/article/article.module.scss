@@ -1,0 +1,21 @@
+@use "tokens" as *;
+
+.header {
+  margin: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  line-height: 1.05;
+}
+
+.meta {
+  margin: 1rem 0 0;
+  color: $nav-rest;
+  font-size: 1.125rem;
+}
+
+.cover {
+  margin: 1.5rem 0 0;
+}

@@ -1,0 +1,56 @@
+@use "motion" as *;
+@use "tokens" as *;
+
+.body {
+  margin-top: 1.5rem;
+  font-size: $copy-size;
+  line-height: 1.4;
+}
+
+.p {
+  margin: 0 0 1rem;
+}
+
+.h2 {
+  margin: 2rem 0 0.75rem;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.h3 {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+.link {
+  color: $signal;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+
+  &:hover {
+    color: $nav-hover;
+  }
+}
+
+.figure {
+  margin: 1.5rem 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.caption,
+.pairCaption {
+  margin: 0.4rem 0 0;
+  color: $nav-rest;
+  font-size: 1.125rem;
+}
+
+.pairCaption {
+  text-align: center;
+}
