@@ -1,5 +1,6 @@
 export const site = {
   name: "Macondo Games",
+  url: "https://macondogames.com",
   tagline: "Independent studio. Worlds of steel, signal, and story.",
   featuredGame: {
     title: "Global Steel",
