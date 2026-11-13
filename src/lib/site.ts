@@ -1,7 +1,8 @@
 export const site = {
   name: "Macondo Games",
   url: "https://macondogames.com",
-  tagline: "Independent studio. Worlds of steel, signal, and story.",
+  description:
+    "Macondo Games is an independent game studio in Panjim, Goa. Global Steel is a 2D run-and-gun platformer inspired by 1980s cartoons and arcade shooters.",
   featuredGame: {
     title: "Global Steel",
   },
