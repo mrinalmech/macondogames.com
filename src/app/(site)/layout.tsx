@@ -20,7 +20,11 @@ export const metadata: Metadata = {
     default: site.name,
     template: `%s | ${site.name}`,
   },
-  description: site.tagline,
+  description: site.description,
+  icons: {
+    icon: { url: "/icon.png", sizes: "512x512", type: "image/png" },
+    apple: { url: "/apple-icon.png", sizes: "512x512", type: "image/png" },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -30,7 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={vcr.variable}
     >
       <body className="min-h-dvh">
-        <div data-page className="relative flex min-h-dvh flex-col">
+        <div data-page data-nosnippet="" className="relative flex min-h-dvh flex-col">
           <PerspectiveGrid />
           <a
             href="#content"

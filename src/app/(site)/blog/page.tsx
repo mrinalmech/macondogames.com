@@ -6,7 +6,8 @@ import styles from "./page.module.scss";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Writing from Macondo Games.",
+  description:
+    "Writing from Macondo Games on making Global Steel, a 2D run-and-gun platformer inspired by 1980s cartoons and arcade shooters.",
 };
 
 export default async function BlogPage() {
