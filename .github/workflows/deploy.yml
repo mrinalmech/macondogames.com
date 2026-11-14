@@ -38,6 +38,7 @@ jobs:
       - name: Roll out the service
         env:
           SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
+          REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
           IMAGE: ${{ steps.ecr.outputs.registry }}/macondogames:${{ github.sha }}
         run: |
           aws ecs update-express-gateway-service \
@@ -46,4 +47,5 @@ jobs:
             --primary-container "$(jq -n \
               --arg image "$IMAGE" \
               --arg token "$SANITY_API_READ_TOKEN" \
-              '{image:$image,containerPort:3000,environment:[{name:"SANITY_API_READ_TOKEN",value:$token}]}')"
+              --arg revalidate "$REVALIDATE_SECRET" \
+              '{image:$image,containerPort:3000,environment:[{name:"SANITY_API_READ_TOKEN",value:$token},{name:"REVALIDATE_SECRET",value:$revalidate}]}')"

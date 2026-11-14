@@ -20,8 +20,11 @@ $copy-size: 1.375rem;
 $page-inset-top: 1.75rem;
 $page-inset-x: 1.25rem;
 $page-inset-bottom: 4.5rem;
-// The blog column. Press is wider because the factsheet sits beside the kit.
-$blog-measure: 46rem;
+// Press page. The factsheet takes a fixed tube; the kit gets the rest.
+$press-page: 72rem;
+$factsheet-width: 18rem;
+$press-gap: 2.75rem;
+$kit-measure: $press-page - $factsheet-width - $press-gap;
 // PRESS KIT and BLOG share this cap height. The gutter keeps the lockup off
 // the screen edge, and the divisor holds the longer word to one line.
 $chrome-title-size: 7.5rem;

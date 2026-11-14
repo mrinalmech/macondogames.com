@@ -16,7 +16,7 @@
   // outer tip of the T's bar.
   [data-letters] {
     --star-left: -0.02em;
-    --star-bottom: 0.2614em;
+    --star-bottom: calc(0.2614em - 1px);
     --star-right: -0.0314em;
     --star-top: 0.067em;
   }

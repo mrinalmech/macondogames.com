@@ -11,7 +11,7 @@
 .holder {
   position: relative;
   container-type: inline-size;
-  width: min(18rem, 100%);
+  width: min($factsheet-width, 100%);
   max-width: 100%;
   min-width: 0;
   margin-inline: auto;
@@ -27,7 +27,7 @@
 
 @media (min-width: $nav-desktop) {
   .holder {
-    width: 18rem;
+    width: $factsheet-width;
   }
 }
 
@@ -65,7 +65,7 @@
   box-sizing: border-box;
   padding: tube-size(1.35rem) tube-size(0.9rem);
   overflow: hidden;
-  background: #0a242c;
+  background: $tube-screen;
   @include tube-panes;
 
   &::after {

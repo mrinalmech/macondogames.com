@@ -1,0 +1,118 @@
+@use "motion" as *;
+@use "tube" as *;
+
+// Cap and base are the 1203-wide plates. They share the monitor's column,
+// which is narrower than the artwork. The side rails are the plate metal.
+$art-w: 1202;
+$cap-opening: 157;
+$base-posts: 157;
+$post: 78;
+$rail-w: $post * 0.5;
+$rail-nudge: 10;
+$rail-inset: $post - $rail-nudge;
+$rail: #8a8694;
+$rail-rim: #000;
+// Fine speckle in the plate's gray-lavender range. The tile repeats, so a long rail stays sharp.
+$rail-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.45' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.22 0 0 0 0.431 0.22 0 0 0 0.415 0.22 0 0 0 0.470 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.housing {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.cap,
+.base {
+  position: relative;
+  z-index: 1;
+  display: block;
+  pointer-events: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.base {
+  margin-top: calc(-#{$base-posts} / #{$art-w} * 100%);
+}
+
+.body {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: calc(-#{$cap-opening} / #{$art-w} * 100%);
+  padding: 1.35rem calc(#{$post} / #{$art-w} * 100% + 1.85rem) 1.5rem;
+  // The fill stops at the inner edge of the rails, so it does not show outside the gray.
+  background: linear-gradient(
+    to right,
+    transparent calc(#{$rail-inset} / #{$art-w} * 100%),
+    $tube-screen calc(#{$rail-inset} / #{$art-w} * 100%),
+    $tube-screen calc(100% - #{$rail-inset} / #{$art-w} * 100%),
+    transparent calc(100% - #{$rail-inset} / #{$art-w} * 100%)
+  );
+}
+
+.railLeft,
+.railRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(#{$rail-w} / #{$art-w} * 100%);
+  background-color: $rail;
+  // The lip strip is the plate highlight, one pixel in from the outer rim. It repeats down the rail.
+  background-image: url("./rail-lip.png"), $rail-noise;
+  background-repeat: repeat-y, repeat;
+  background-size: 1px auto, 96px 96px;
+  pointer-events: none;
+}
+
+.railLeft {
+  left: calc((#{$rail-w} - #{$rail-nudge}) / #{$art-w} * 100%);
+  background-position: 1px 0, 0 0;
+  box-shadow: inset 1px 0 0 $rail-rim;
+}
+
+.railRight {
+  right: calc((#{$rail-w} - #{$rail-nudge}) / #{$art-w} * 100%);
+  background-position: right 1px top 23px, 0 0;
+  box-shadow: inset -1px 0 0 $rail-rim;
+}
+
+.monitor {
+  position: relative;
+  display: block;
+}
+
+// The picture fills the glass. The bezel sits over it, and the screen
+// clips anything that falls outside the opening.
+.screen {
+  position: absolute;
+  z-index: 0;
+  overflow: hidden;
+  left: calc(#{$press-bezel-left} / #{$press-bezel-w} * 100%);
+  top: calc(#{$press-bezel-top} / #{$press-bezel-h} * 100%);
+  width: calc(#{$press-bezel-glass-w} / #{$press-bezel-w} * 100%);
+  height: calc(#{$press-bezel-glass-h} / #{$press-bezel-h} * 100%);
+  background: #000;
+}
+
+.bezel {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
