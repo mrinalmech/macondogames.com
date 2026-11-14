@@ -36,11 +36,11 @@ $vcr-lock-frames: (
   @include vcr-lock-once;
 }
 
-$rest-glow: 0 0 8px glow($signal, 0.28);
+$rest-glow: 0 0 $focus-glow glow($signal, $focus-alpha);
 
 @mixin vcr-focus-ring {
-  outline: 2px solid var(--signal);
-  outline-offset: 3px;
+  outline: $focus-ring solid var(--signal);
+  outline-offset: $focus-offset;
   box-shadow: $rest-glow;
 }
 
@@ -189,8 +189,8 @@ $rest-glow: 0 0 8px glow($signal, 0.28);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--signal);
-    outline-offset: 3px;
+    outline: $focus-ring solid var(--signal);
+    outline-offset: $focus-offset;
   }
 
   @media (prefers-reduced-motion: reduce) {

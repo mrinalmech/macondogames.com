@@ -128,7 +128,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid $signal;
-    outline-offset: 3px;
+    outline: $focus-ring solid $signal;
+    outline-offset: $focus-offset;
   }
 }

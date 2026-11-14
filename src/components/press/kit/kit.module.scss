@@ -68,8 +68,8 @@ $logo-row: $company-ink-w + $logo-gap + $game-ink-w;
   }
 
   &:focus-visible {
-    outline: 2px solid $signal;
-    outline-offset: 3px;
+    outline: $focus-ring solid $signal;
+    outline-offset: $focus-offset;
   }
 }
 
@@ -201,8 +201,8 @@ $shots-pair: 68rem;
 
 .shot:focus-visible,
 .logo:focus-visible {
-  outline: 2px solid $signal;
-  outline-offset: 3px;
+  outline: $focus-ring solid $signal;
+  outline-offset: $focus-offset;
 }
 
 @media (min-width: $shots-pair) {

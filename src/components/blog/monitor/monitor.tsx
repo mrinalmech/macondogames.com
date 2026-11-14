@@ -10,10 +10,12 @@ import styles from "./monitor.module.scss";
 export function Monitor({
   image,
   priority = false,
+  control = null,
   children,
 }: {
   image?: SanityImage | null;
   priority?: boolean;
+  control?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -28,15 +30,16 @@ export function Monitor({
       ) : null}
       <div className={styles.housing}>
         <div className={styles.cap} aria-hidden>
-          <Image src={housingTop} alt="" unoptimized />
+          <Image src={housingTop} alt="" unoptimized className={styles.plate} />
         </div>
         <div className={styles.body}>
           <span className={styles.railLeft} aria-hidden />
           <span className={styles.railRight} aria-hidden />
           {children}
         </div>
-        <div className={styles.base} aria-hidden>
-          <Image src={housingBottom} alt="" unoptimized />
+        <div className={styles.base}>
+          <Image src={housingBottom} alt="" unoptimized className={styles.plate} />
+          {control}
         </div>
       </div>
     </div>
