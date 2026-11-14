@@ -20,14 +20,12 @@
     "styled-components": "^6.6.0"
   },
   "devDependencies": {
-    "@portabletext/block-tools": "^6.0.7",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
-    "jsdom": "^31.0.0",
     "sass": "^1.106.1",
     "sass-loader": "^16.0.8",
     "tailwindcss": "^4",
