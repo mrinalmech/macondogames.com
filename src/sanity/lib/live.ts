@@ -1,5 +1,7 @@
+import { cacheTag } from "next/cache";
 import { createClient } from "next-sanity";
 import { defineLive, type StrictDefinedFetchType } from "next-sanity/live";
+import { sanityCacheTag } from "@/sanity/lib/cache-tag";
 import { dataset, projectId } from "@/sanity/env";
 
 const token = process.env.SANITY_API_READ_TOKEN;
@@ -27,5 +29,6 @@ export const { sanityFetch, SanityLive } = live;
 
 export const cachedSanity: StrictDefinedFetchType = async (options) => {
   "use cache";
+  cacheTag(sanityCacheTag);
   return sanityFetch(options);
 };

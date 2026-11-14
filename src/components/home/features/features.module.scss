@@ -62,10 +62,21 @@ $band: 5rem;
   white-space: nowrap;
 }
 
+// THE GOOD and THE BAD share the T and D corners. The upper spark sits
+// 0.625px right and 0.625px below that mark.
+.copy h2:not([data-corners]) [data-letters] {
+  --star-top: calc(0.073em + var(--star-drop) + 0.625px);
+  --star-right: calc(0.023em + var(--star-inset) - 0.625px);
+}
+
 // The A starts left of the T, and the S ends a little inside the D.
+// The lower spark sits 0.25px left and 0.25px above the A's corner.
+// The upper spark sits 1.5px right and 1.5px below the S.
 .copy h2[data-corners="as"] [data-letters] {
-  --star-left: calc(-0.003em + var(--star-shift));
-  --star-right: calc(0.038em + var(--star-inset));
+  --star-left: calc(-0.003em + var(--star-shift) - 0.25px);
+  --star-bottom: calc(0.255em + var(--star-lift) + 0.25px);
+  --star-right: calc(0.038em + var(--star-inset) - 1.5px);
+  --star-top: calc(0.073em + var(--star-drop) + 1.5px);
 }
 
 .body {

@@ -7,6 +7,7 @@ import {
   type DocumentActionComponent,
   type DocumentActionProps,
 } from "sanity";
+import { bustSanityCache } from "@/sanity/lib/bust-cache";
 
 function postedByOf(document: DocumentActionProps["draft"]) {
   const value = document?.postedBy;
@@ -48,6 +49,7 @@ export function publishWithPostedBy(
       if (draftName !== name || publish.disabled || sent.current) return;
       sent.current = true;
       publish.execute();
+      void bustSanityCache();
       setPhase("idle");
       onComplete();
     }, [draftName, name, onComplete, patch, phase, publish]);
@@ -61,7 +63,15 @@ export function publishWithPostedBy(
         publish.disabled === "ALREADY_PUBLISHED" ||
         publish.disabled === "NO_CHANGES");
 
-    if (!needsName) return original;
+    if (!needsName) {
+      return {
+        ...original,
+        onHandle: () => {
+          original.onHandle?.();
+          void bustSanityCache();
+        },
+      };
+    }
 
     return {
       ...original,
