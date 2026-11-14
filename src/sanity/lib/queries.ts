@@ -1,11 +1,6 @@
 const image = `{
   alt,
-  asset->{
-    url,
-    mimeType,
-    "width": metadata.dimensions.width,
-    "height": metadata.dimensions.height
-  }
+  asset { _ref }
 }`;
 
 export const postsQuery = `*[_type == "post" && defined(slug.current)] | order(publishedAt desc) {
@@ -30,12 +25,7 @@ export const postQuery = `*[_type == "post" && slug.current == $slug][0] {
     ...,
     _type == "image" => {
       ...,
-      asset->{
-        url,
-        mimeType,
-        "width": metadata.dimensions.width,
-        "height": metadata.dimensions.height
-      }
+      asset { _ref }
     },
     _type == "imagePair" => {
       ...,
