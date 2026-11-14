@@ -7,6 +7,11 @@ $intro: 0.8s;
 $fps: 24;
 // One tracking step, then a hold. The logo and the menu glyph use it.
 $vcr-lock: 240ms;
+// Keyboard ring shared by the nav and the blog read-more plate.
+$focus-ring: 2px;
+$focus-offset: 3px;
+$focus-glow: 8px;
+$focus-alpha: 0.28;
 $header-block: 102px;
 // Caption stacks, and the feature band's top padding tightens.
 $compact: 40rem;

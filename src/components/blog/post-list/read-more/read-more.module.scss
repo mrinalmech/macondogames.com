@@ -1,0 +1,88 @@
+@use "motion" as *;
+@use "tokens" as *;
+
+// The housing plate is 1203×458. The third lamp box from the right ends at
+// x=1066. The raised face ends 26px inside the art, so the link box is
+// shifted until that face, not the darker foot, sits just past the box.
+// Press is a larger canvas. The offsets keep its foot on the same pixels as
+// the other two, so a click lowers the button and leaves the foot still.
+$plate-w: 1203;
+$plate-h: 458;
+$button-w: 365;
+$button-h: 84;
+$button-top: 310;
+$third-box-right: 1066;
+$face-inset-right: 26;
+$button-right: $plate-w - $third-box-right - 12 - $face-inset-right;
+$press-w: 385;
+$press-shift-x: -12;
+$press-shift-y: -42;
+
+.button {
+  position: absolute;
+  z-index: 1;
+  right: calc(#{$button-right} / #{$plate-w} * 100%);
+  bottom: calc((#{$plate-h - $button-top - $button-h}) / #{$plate-h} * 100%);
+  width: calc(#{$button-w} / #{$plate-w} * 100%);
+  pointer-events: auto;
+  line-height: 0;
+
+  &:focus-visible {
+    outline: $focus-ring solid var(--signal);
+    outline-offset: $focus-offset;
+    box-shadow: 0 0 $focus-glow glow($signal, $focus-alpha);
+  }
+}
+
+.face {
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.normal {
+  width: 100%;
+  height: auto;
+}
+
+.hover,
+.press {
+  position: absolute;
+  opacity: 0;
+}
+
+.hover {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.press {
+  left: calc(#{$press-shift-x} / #{$button-w} * 100%);
+  top: calc(#{$press-shift-y} / #{$button-h} * 100%);
+  width: calc(#{$press-w} / #{$button-w} * 100%);
+  max-width: none;
+  height: auto;
+}
+
+.button:hover,
+.button:focus-visible {
+  .normal {
+    opacity: 0;
+  }
+
+  .hover {
+    opacity: 1;
+  }
+}
+
+.button:active {
+  .normal,
+  .hover {
+    opacity: 0;
+  }
+
+  .press {
+    opacity: 1;
+  }
+}
