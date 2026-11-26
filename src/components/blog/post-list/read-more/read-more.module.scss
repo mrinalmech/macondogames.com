@@ -1,3 +1,4 @@
+@use "sass:math";
 @use "motion" as *;
 @use "tokens" as *;
 
@@ -17,13 +18,27 @@ $button-right: $plate-w - $third-box-right - 12 - $face-inset-right;
 $press-w: 385;
 $press-shift-x: -12;
 $press-shift-y: -42;
+// The 30% slice drops the painted letters under a readable size on a narrow
+// plate. Hold the face here. The right edge and the vertical center stay,
+// so the extra size grows left and a little up and down.
+$button-floor: 11rem;
+// The groove under the lamp row ends at y=290 and the lower groove starts
+// at y=415. This span sits inside that band, clear of both lines. A short
+// plate cannot hold the floor, so the face shrinks to the span.
+$slot-span: 100;
+$face-mid: $plate-h - $button-top - math.div($button-h, 2);
+$half-face: math.div($button-h, 2 * $button-w);
+$button-cap: calc(#{$slot-span} / #{$plate-w} * #{$button-w} / #{$button-h} * 100cqi);
 
 .button {
   position: absolute;
   z-index: 1;
   right: calc(#{$button-right} / #{$plate-w} * 100%);
-  bottom: calc((#{$plate-h - $button-top - $button-h}) / #{$plate-h} * 100%);
-  width: calc(#{$button-w} / #{$plate-w} * 100%);
+  bottom: calc(
+    #{$face-mid} / #{$plate-h} * 100% - min(max(#{$button-floor}, #{$button-w} / #{$plate-w} * 100cqi), #{$button-cap}) *
+      #{$half-face}
+  );
+  width: min(max(#{$button-floor}, calc(#{$button-w} / #{$plate-w} * 100%)), #{$button-cap});
   pointer-events: auto;
   line-height: 0;
 

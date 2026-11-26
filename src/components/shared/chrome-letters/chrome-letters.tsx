@@ -36,10 +36,10 @@ export function ChromeFilters() {
     <svg className={styles.edgeFilter} aria-hidden="true">
       <filter
         id="feature-heading-smooth"
-        x="-40%"
-        y="-50%"
-        width="180%"
-        height="200%"
+        x="-8%"
+        y="-16%"
+        width="116%"
+        height="132%"
         colorInterpolationFilters="sRGB"
       >
         <feOffset in="SourceAlpha" dx="-3" dy="-2.2" result="darkWideShift" />
@@ -87,13 +87,14 @@ export function ChromeFilters() {
         <feGaussianBlur in="beveled" stdDeviation="0.55 0.08" result="soft" />
         <feComposite in="soft" in2="SourceAlpha" operator="in" />
       </filter>
+      {/* The rim is the glyph's own edge. A larger region leaves a line beside the word. */}
       <filter
         id="chrome-shine-rim"
         primitiveUnits="objectBoundingBox"
-        x="-20%"
-        y="-20%"
-        width="140%"
-        height="140%"
+        x="0%"
+        y="0%"
+        width="100%"
+        height="100%"
         colorInterpolationFilters="sRGB"
       >
         <feMorphology in="SourceAlpha" operator="erode" radius="0.005 0.022" result="inset" />

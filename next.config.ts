@@ -33,6 +33,16 @@ const nextConfig: NextConfig = {
         hostname: "cdn.sanity.io",
         pathname: "/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "clan.fastly.steamstatic.com",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.ytimg.com",
+        pathname: "/vi/**",
+      },
     ],
   },
   // Published posts stay cached until Sanity Live invalidates them.

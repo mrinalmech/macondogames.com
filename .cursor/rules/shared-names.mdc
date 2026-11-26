@@ -1,0 +1,17 @@
+---
+description: Shared Sass and JavaScript values are named for the value
+alwaysApply: true
+---
+
+# Shared names
+
+A Sass variable, a custom property, or a JavaScript constant used in more than one file is named for the value. The name has to make sense in every file that reads it.
+
+```scss
+// Press, the blog, and the feature band share this row.
+$row-width: 72rem;
+```
+
+When a second file starts reading a value, rename it in that change if the old name only fits the first file. `$holder-width` is the side tube on the press page and the blog. `$monitor-bezel-w` is the monitor frame the blog cover, the press screenshots, and the Steam card all slice.
+
+A value that one file uses keeps that file's name. `$shots-pair` is where the press screenshots sit side by side.

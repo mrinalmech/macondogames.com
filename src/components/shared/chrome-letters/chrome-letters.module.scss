@@ -50,7 +50,9 @@
   padding: 0.02em 0.06em 0.08em 0.14em;
   margin: -0.02em -0.06em -0.08em -0.14em;
   // The stars stay outside this box so the bevel does not reach them.
+  // Firefox paints a line at the filter region edge. The bevel stays inside the glyphs.
   filter: url("#feature-heading-smooth");
+  clip-path: inset(0);
 }
 
 .fill,
@@ -94,6 +96,9 @@
   pointer-events: none;
   // The band sits in the middle of a 200% image, so 0%–100% would park
   // it on the title. The mask keeps both the outline and the wash inside it.
+  // Once the band has left the glyphs it still hangs past the box, and
+  // Firefox paints that overhang as a line beside the word.
+  clip-path: inset(0);
   background-size: 200% 100%;
   background-repeat: no-repeat;
   background-position: 130% 0;
@@ -121,7 +126,6 @@
 }
 
 .wash {
-  -webkit-text-stroke: 0;
   background-image: linear-gradient(
     #{$shine-angle},
     rgb(255 255 255 / 0%) 34%,
@@ -136,8 +140,6 @@
 // outside the letter. This rim is the outer skin of the glyph.
 .edge {
   color: #fff;
-  background-image: none;
-  -webkit-text-stroke: 0;
   filter: url("#chrome-shine-rim");
 }
 

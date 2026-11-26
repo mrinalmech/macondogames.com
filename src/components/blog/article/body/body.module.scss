@@ -1,9 +1,8 @@
-@use "motion" as *;
+@use "copy" as *;
 @use "tokens" as *;
 
 .body {
-  font-size: $copy-size;
-  line-height: 1.4;
+  @include reading-copy(1.4);
 }
 
 .p {
