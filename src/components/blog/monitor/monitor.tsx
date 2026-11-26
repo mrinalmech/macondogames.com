@@ -25,7 +25,14 @@ export function Monitor({
           <span className={styles.screen}>
             <BlogImage image={image} priority={priority} frame />
           </span>
-          <Image src={monitor} alt="" className={styles.bezel} />
+          <Image
+            src={monitor}
+            alt=""
+            priority={priority}
+            fetchPriority={priority ? "high" : "auto"}
+            sizes="(min-width: 48rem) 52rem, (min-width: 40rem) calc(100vw - 19rem), calc(100vw - 2.5rem)"
+            className={styles.bezel}
+          />
         </span>
       ) : null}
       <div className={styles.housing}>

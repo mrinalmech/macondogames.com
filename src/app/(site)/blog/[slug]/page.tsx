@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { Article } from "@/components/blog/article/article";
 import { BlogTitle } from "@/components/blog/blog-title/blog-title";
+import { Feed } from "@/components/blog/feed/feed";
+import { Holder } from "@/components/shared/holder/holder";
 import { loadPost, loadPostSlugs } from "@/sanity/lib/posts";
-import styles from "./page.module.scss";
+import styles from "../page.module.scss";
 
 // The slug decides whether this is an article or a 404, so the route waits
 // for it instead of streaming a shell first.
@@ -46,7 +49,15 @@ export default async function BlogPostPage({
       <article className={styles.page} data-floor>
         <div className={styles.inner}>
           <BlogTitle />
-          <Article post={post} />
+          <div className={styles.layout}>
+            <Article post={post} />
+            <Holder>
+              {/* The feed refreshes on its own, outside the page cache. */}
+              <Suspense fallback={null}>
+                <Feed />
+              </Suspense>
+            </Holder>
+          </div>
         </div>
       </article>
     </main>

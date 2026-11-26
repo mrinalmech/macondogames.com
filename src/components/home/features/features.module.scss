@@ -14,7 +14,7 @@ $band: 5rem;
 }
 
 .inner {
-  max-width: 72rem;
+  max-width: $row-width;
   margin-inline: auto;
 }
 

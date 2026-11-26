@@ -5,7 +5,28 @@
 }
 
 .inner {
-  max-width: $kit-measure;
+  max-width: $row-width;
   margin-inline: auto;
   min-width: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: $stack-gap;
+  align-items: start;
+  min-width: 0;
+}
+
+@media (min-width: $side-columns) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: $narrow-side-gap;
+  }
+}
+
+@media (min-width: $nav-desktop) {
+  .layout {
+    column-gap: $side-gap;
+  }
 }

@@ -1,0 +1,19 @@
+@use "motion" as *;
+
+// Blog paragraphs and the press kit body while the side tube is still
+// crowding the column. The columns pair at $side-columns. The tube then
+// widens at $nav-desktop, so the copy stays small until the column
+// has room again.
+$reading-size: 1.125rem;
+$reading-leading: 1.3;
+$reading-wide: 52rem;
+
+@mixin reading-copy($leading) {
+  font-size: $reading-size;
+  line-height: $reading-leading;
+
+  @media (min-width: $reading-wide) {
+    font-size: $copy-size;
+    line-height: $leading;
+  }
+}

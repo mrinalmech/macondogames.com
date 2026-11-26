@@ -9,10 +9,10 @@
 // color-scheme: dark, which paints this iframe's transparent canvas white,
 // so the frame opts back out.
 $lip: 2;
-$slice-top: $press-bezel-top - $lip;
-$slice-right: $press-bezel-w - $press-bezel-left - $press-bezel-glass-w - $lip;
-$slice-bottom: $press-bezel-h - $press-bezel-top - $press-bezel-glass-h - $lip;
-$slice-left: $press-bezel-left - $lip;
+$slice-top: $monitor-bezel-top - $lip;
+$slice-right: $monitor-bezel-w - $monitor-bezel-left - $monitor-bezel-glass-w - $lip;
+$slice-bottom: $monitor-bezel-h - $monitor-bezel-top - $monitor-bezel-glass-h - $lip;
+$slice-left: $monitor-bezel-left - $lip;
 $card-w: 646px;
 $card-h: 166px;
 $glass-w: 646px;

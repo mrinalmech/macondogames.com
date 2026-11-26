@@ -1,4 +1,4 @@
-@use "motion" as *;
+@use "copy" as *;
 @use "tokens" as *;
 
 .list {
@@ -24,13 +24,12 @@
 
 .excerpt {
   margin: 0;
-  font-size: $copy-size;
-  line-height: 1.35;
   white-space: pre-wrap;
+  @include reading-copy(1.35);
 }
 
 .empty {
   margin: 0;
   text-align: center;
-  font-size: $copy-size;
+  @include reading-copy(1.35);
 }

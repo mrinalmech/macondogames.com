@@ -81,6 +81,14 @@ A length, time, or rate used in more than one file is a Sass variable in `src/ap
 
 Keyframe offsets stay Sass values. A custom property cannot be a keyframe stop. Modules and partials `@use "motion"`. One-off measurements, such as a logo's pixel gap, stay in the component that measures them.
 
+## Shared names
+
+A Sass variable, a custom property, or a JavaScript constant used in more than one file is named for the value. The name has to make sense in every file that reads it.
+
+When a second file starts reading a value, rename it in that change if the old name only fits the first file. `$row-width` is the row the press page, the blog, and the feature band share. `$holder-width` is the side tube on the press page and the blog. `$monitor-bezel-w` is the monitor frame the blog cover, the press screenshots, and the Steam card all slice.
+
+A value that one file uses keeps that file's name. `$shots-pair` is where the press screenshots sit side by side.
+
 ## Linting
 
 `npm run lint` must pass with no errors and no warnings. A change is not done while lint fails. Run it on the files you touched before finishing, and fix what it reports.

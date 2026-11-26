@@ -1,0 +1,71 @@
+@use "motion" as *;
+@use "tube" as *;
+
+// Between the side-by-side breakpoint and the desktop nav, the full tube
+// would squeeze the main column.
+$holder-narrow: 15rem;
+
+.holder {
+  position: relative;
+  container-type: inline-size;
+  width: min($holder-width, 100%);
+  max-width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+@media (min-width: $side-columns) {
+  .holder {
+    width: $holder-narrow;
+  }
+}
+
+@media (min-width: $nav-desktop) {
+  .holder {
+    width: $holder-width;
+  }
+}
+
+.bezel {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+// The rails are one transparent sheet, aligned to the holder canvas.
+.frame {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+// Opening measured on the 502×1024 holder. The box covers the clear
+// pixels and the one-pixel soft edge so the frame blends onto the text.
+.screen {
+  position: absolute;
+  z-index: 0;
+  left: calc(39 / 502 * 100%);
+  top: calc(36 / 1024 * 100%);
+  width: calc(420 / 502 * 100%);
+  height: calc(846 / 1024 * 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: tube-size(1.35rem) tube-size(0.9rem);
+  overflow: hidden;
+  background: $tube-screen;
+  @include tube-panes;
+
+  &::after {
+    background:
+      tube-scanlines($tube-scan-quiet),
+      tube-vignette($tube-vignette-quiet);
+  }
+}

@@ -44,6 +44,8 @@ $rail-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' w
 
 .base {
   margin-top: calc(-#{$base-posts} / #{$art-w} * 100%);
+  // The read-more face reads this width so a narrow plate can hold the button.
+  container-type: inline-size;
 }
 
 .body {
@@ -101,10 +103,10 @@ $rail-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' w
   position: absolute;
   z-index: 0;
   overflow: hidden;
-  left: calc(#{$press-bezel-left} / #{$press-bezel-w} * 100%);
-  top: calc(#{$press-bezel-top} / #{$press-bezel-h} * 100%);
-  width: calc(#{$press-bezel-glass-w} / #{$press-bezel-w} * 100%);
-  height: calc(#{$press-bezel-glass-h} / #{$press-bezel-h} * 100%);
+  left: calc(#{$monitor-bezel-left} / #{$monitor-bezel-w} * 100%);
+  top: calc(#{$monitor-bezel-top} / #{$monitor-bezel-h} * 100%);
+  width: calc(#{$monitor-bezel-glass-w} / #{$monitor-bezel-w} * 100%);
+  height: calc(#{$monitor-bezel-glass-h} / #{$monitor-bezel-h} * 100%);
   background: #000;
 }
 

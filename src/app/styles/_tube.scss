@@ -1,5 +1,13 @@
+@use "sass:math";
+@use "motion";
+
 // The factsheet glass, and the blog text housing.
 $tube-screen: #0a242c;
+
+// Interior sizes are a share of the full holder tube.
+@function tube-size($size) {
+  @return math.div($size, motion.$holder-width) * 100cqi;
+}
 
 // The monitor pictures take a heavier glass than text on a screen.
 $tube-scan: 0.28;

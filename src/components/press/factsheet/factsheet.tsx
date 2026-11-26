@@ -1,6 +1,4 @@
-import Image from "next/image";
-import holder from "./holder.webp";
-import screen from "./screen.webp";
+import { Holder } from "@/components/shared/holder/holder";
 import styles from "./factsheet.module.scss";
 
 const facts = [
@@ -42,30 +40,18 @@ function FactValue({ value, href }: { value: string; href?: string }) {
 
 export function Factsheet() {
   return (
-    <aside className={styles.holder}>
-      <div className={styles.screen}>
-        <h2 className={styles.heading}>Factsheet</h2>
-        <dl className={styles.facts}>
-          {facts.map((fact) => (
-            <div key={fact.label} className={styles.fact}>
-              <dt>{fact.label}</dt>
-              <dd>
-                <FactValue value={fact.value} href={fact.href} />
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      <Image
-        src={holder}
-        alt=""
-        unoptimized
-        preload
-        fetchPriority="high"
-        loading="eager"
-        className={styles.bezel}
-      />
-      <Image src={screen} alt="" unoptimized className={styles.frame} />
-    </aside>
+    <Holder aside>
+      <h2 className={styles.heading}>Factsheet</h2>
+      <dl className={styles.facts}>
+        {facts.map((fact) => (
+          <div key={fact.label} className={styles.fact}>
+            <dt>{fact.label}</dt>
+            <dd>
+              <FactValue value={fact.value} href={fact.href} />
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Holder>
   );
 }
