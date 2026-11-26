@@ -42,6 +42,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {
+    // Remind about security upgrades during dev and build.
+    agentUpgrade: "security",
     // Sass is compiled by the loaders below so it finishes before Tailwind.
     turbopackUseBuiltinSass: false,
   },
