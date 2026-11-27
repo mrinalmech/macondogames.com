@@ -1,12 +1,12 @@
 import { cacheLife } from "next/cache";
 
 const steamApp = 1073970;
-const youtubeChannel = "UCfYKziK0Ll8UZ9AiMTZT9DA";
+const instagramAccount = "17841444851031089";
 const perSource = 6;
 const rowCap = 6;
 const platformCap = 3;
 
-export type FeedPlatform = "steam" | "youtube";
+export type FeedPlatform = "steam" | "instagram";
 
 export type FeedPost = {
   id: string;
@@ -18,21 +18,21 @@ export type FeedPost = {
   image: string;
 };
 
-// Steam and YouTube do not call this site when something is posted.
+// Steam and Instagram do not call this site when something is posted.
 // The page cache lasts until Sanity changes. A stale time of 5 minutes is
 // long enough to freeze this list into that page, so a new post stays missing.
 // Under 5 minutes, the list stays out of that page and is fetched on its own.
-// The server asks Steam and YouTube again after a minute.
+// The server asks each source again after a minute.
 export async function loadFeed(): Promise<FeedPost[]> {
   "use cache";
   cacheLife({ stale: 60, revalidate: 60, expire: 60 * 60 });
 
-  const [steam, youtube] = await Promise.all([
+  const [steam, instagram] = await Promise.all([
     loadSteam().catch(empty),
-    loadYoutube().catch(empty),
+    loadInstagram().catch(empty),
   ]);
 
-  return merge(steam, youtube);
+  return merge([steam, instagram]);
 }
 
 function empty(error: unknown): FeedPost[] {
@@ -79,52 +79,59 @@ async function loadSteam(): Promise<FeedPost[]> {
   });
 }
 
-async function loadYoutube(): Promise<FeedPost[]> {
+async function loadInstagram(): Promise<FeedPost[]> {
+  const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+  if (!token) return [];
+
   const response = await fetch(
-    `https://www.youtube.com/feeds/videos.xml?channel_id=${youtubeChannel}`,
-    { cache: "no-store" },
+    `https://graph.facebook.com/v27.0/${instagramAccount}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=${perSource}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    },
   );
-  if (!response.ok) throw new Error(`YouTube feed ${response.status}`);
+  if (!response.ok) throw new Error(`Instagram media ${response.status}`);
 
-  const xml = await response.text();
-  const posts: FeedPost[] = [];
+  const body = (await response.json()) as {
+    data?: Array<{
+      id?: string;
+      caption?: string;
+      media_type?: string;
+      media_url?: string;
+      thumbnail_url?: string;
+      permalink?: string;
+      timestamp?: string;
+    }>;
+    error?: unknown;
+  };
+  if (body.error) throw new Error("Instagram media error");
 
-  for (const entry of xml.split("<entry>").slice(1)) {
-    const block = entry.split("</entry>")[0] ?? "";
-    const id = text(block, "yt:videoId");
-    const title = text(block, "title");
-    const publishedAt = text(block, "published");
-    const href = link(block);
-    if (!id || !title || !publishedAt || !href) continue;
+  return (body.data ?? []).flatMap((item) => {
+    if (!item.id || !item.permalink || !item.timestamp) return [];
+    const copy = instagramCopy(item.caption ?? "");
+    // A video's media_url is the file. The picture is the thumbnail.
+    const image = item.media_type === "VIDEO" ? item.thumbnail_url : item.media_url;
 
-    posts.push({
-      id: `youtube-${id}`,
-      platform: "youtube",
-      title,
-      href,
-      publishedAt,
-      excerpt: excerpt(text(block, "media:description")),
-      image: thumbnail(block),
-    });
-    if (posts.length === perSource) break;
-  }
-
-  return posts;
+    return [
+      {
+        id: `instagram-${item.id}`,
+        platform: "instagram" as const,
+        title: copy.title,
+        href: item.permalink,
+        publishedAt: item.timestamp,
+        excerpt: copy.excerpt,
+        image: https(image ?? ""),
+      },
+    ];
+  });
 }
 
-function text(block: string, tag: string) {
-  const match = block.match(new RegExp(`<${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</${tag}>`));
-  return match ? decode(match[1] ?? "") : "";
-}
-
-function link(block: string) {
-  const match = block.match(/<link\b[^>]*\bhref="([^"]+)"/);
-  return match ? decode(match[1] ?? "") : "";
-}
-
-function thumbnail(block: string) {
-  const match = block.match(/<media:thumbnail\b[^>]*\burl="([^"]+)"/);
-  return https(match ? decode(match[1] ?? "") : "");
+function instagramCopy(caption: string) {
+  const trimmed = caption.trim();
+  const lineEnd = trimmed.indexOf("\n");
+  const title = (lineEnd === -1 ? trimmed : trimmed.slice(0, lineEnd)).trim();
+  const rest = lineEnd === -1 ? "" : trimmed.slice(lineEnd + 1);
+  return { title: title || "Instagram", excerpt: excerpt(rest) };
 }
 
 // Two lines of the tube. The rest of a long description stays on the post.
@@ -154,22 +161,11 @@ function https(src: string) {
   return src.startsWith("https://") ? src : "";
 }
 
-function decode(value: string) {
-  return value
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .trim();
-}
-
-function merge(steam: FeedPost[], youtube: FeedPost[]) {
-  const ranked = [...steam, ...youtube].sort(
+function merge(groups: FeedPost[][]) {
+  const ranked = groups.flat().sort(
     (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
   );
-  const counts: Record<FeedPlatform, number> = { steam: 0, youtube: 0 };
+  const counts: Record<FeedPlatform, number> = { steam: 0, instagram: 0 };
   const posts: FeedPost[] = [];
 
   for (const post of ranked) {

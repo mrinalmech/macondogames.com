@@ -29,6 +29,8 @@ $page-inset-bottom: 4.5rem;
 // Press, the blog, and the feature band share this row. The holder is the side tube.
 $row-width: 72rem;
 $holder-width: 18rem;
+// Side inset of the holder glass. The feed scrollbar sits in this gap.
+$screen-pad-x: 0.9rem;
 $side-gap: 2.75rem;
 // While the holder is the narrow tube, between $side-columns and $nav-desktop.
 $narrow-side-gap: 1.5rem;

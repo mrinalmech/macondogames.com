@@ -40,8 +40,8 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**.ytimg.com",
-        pathname: "/vi/**",
+        hostname: "**.cdninstagram.com",
+        pathname: "/v/**",
       },
     ],
   },

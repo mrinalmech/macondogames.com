@@ -39,6 +39,7 @@ jobs:
         env:
           SANITY_API_READ_TOKEN: ${{ secrets.SANITY_API_READ_TOKEN }}
           REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           IMAGE: ${{ steps.ecr.outputs.registry }}/macondogames:${{ github.sha }}
         run: |
           aws ecs update-express-gateway-service \
@@ -48,4 +49,5 @@ jobs:
               --arg image "$IMAGE" \
               --arg token "$SANITY_API_READ_TOKEN" \
               --arg revalidate "$REVALIDATE_SECRET" \
-              '{image:$image,containerPort:3000,environment:[{name:"SANITY_API_READ_TOKEN",value:$token},{name:"REVALIDATE_SECRET",value:$revalidate}]}')"
+              --arg instagram "$INSTAGRAM_ACCESS_TOKEN" \
+              '{image:$image,containerPort:3000,environment:[{name:"SANITY_API_READ_TOKEN",value:$token},{name:"REVALIDATE_SECRET",value:$revalidate},{name:"INSTAGRAM_ACCESS_TOKEN",value:$instagram}]}')"
