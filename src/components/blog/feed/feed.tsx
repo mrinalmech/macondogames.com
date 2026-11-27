@@ -6,7 +6,7 @@ import styles from "./feed.module.scss";
 
 const labels = {
   steam: "Steam",
-  youtube: "YouTube",
+  instagram: "Instagram",
 } as const;
 
 export async function Feed() {
@@ -14,20 +14,20 @@ export async function Feed() {
   if (posts.length === 0) return null;
 
   return (
-    <ul className={styles.list} aria-label="Latest from Steam and YouTube">
+    <ul className={styles.list} aria-label="Latest from Steam and Instagram">
       {posts.map((post) => (
         <li key={post.id}>
           <a className={styles.post} href={post.href} target="_blank" rel="noreferrer">
             <PlatformIcon platform={post.platform} className={styles[post.platform]} />
             <span className={styles.text}>
               <span className={styles.name}>{labels[post.platform]}</span>
+              <time className={styles.date} dateTime={post.publishedAt}>
+                {formatPublished(post.publishedAt)}
+              </time>
               <span className={styles.title}>{post.title}</span>
             </span>
             {post.image ? <FeedImage src={post.image} /> : null}
             {post.excerpt ? <span className={styles.excerpt}>{post.excerpt}</span> : null}
-            <time className={styles.date} dateTime={post.publishedAt}>
-              {formatPublished(post.publishedAt)}
-            </time>
           </a>
         </li>
       ))}
@@ -35,8 +35,8 @@ export async function Feed() {
   );
 }
 
-// The tube glass is about 14rem across. Steam and YouTube pictures are resized
-// to that. Any other host stays a plain image so the feed still renders.
+// The tube glass is about 14rem across. Steam and Instagram pictures are
+// resized to that. Any other host stays a plain image so the feed still renders.
 function FeedImage({ src }: { src: string }) {
   if (!canOptimize(src)) {
     return (
@@ -55,7 +55,7 @@ function FeedImage({ src }: { src: string }) {
 function canOptimize(src: string) {
   try {
     const host = new URL(src).hostname;
-    return host === "clan.fastly.steamstatic.com" || host.endsWith(".ytimg.com");
+    return host === "clan.fastly.steamstatic.com" || host.endsWith(".cdninstagram.com");
   } catch {
     return false;
   }

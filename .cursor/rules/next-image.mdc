@@ -1,0 +1,24 @@
+---
+description: Render content images with next/image
+alwaysApply: true
+---
+
+# Images
+
+A content picture uses `next/image`. In the same change, allow its host in `images.remotePatterns` in `next.config.ts`. Set `protocol`, `hostname`, and a `pathname` that covers the files. A signed URL needs its query string, so leave `search` unset. Pass `sizes` for the width the layout actually paints. Use `fill` when a frame sets the box.
+
+```tsx
+<Image src={src} alt="" fill sizes="14rem" className={styles.image} />
+```
+
+```ts
+{
+  protocol: "https",
+  hostname: "**.cdninstagram.com",
+  pathname: "/v/**",
+}
+```
+
+A host that cannot be allowlisted stays a plain `img`, with the eslint exception that says why, so the picture still renders. Do not point `next/image` at a host that is missing from `remotePatterns`. That request fails.
+
+A `quality` other than 75 must be listed in `images.qualities`. Logos use 90, which is already listed.

@@ -9,7 +9,11 @@
   gap: tube-size(1.15rem);
   min-height: 0;
   margin: 0;
-  padding: 0;
+  // The painted thumb stops short of the scrollport. Pull it toward the rail.
+  // The extra 0.5px on each side insets the posts. The rest of the right padding cancels the pull.
+  // The bottom padding lets the last image border scroll clear of the screen clip.
+  margin-right: -8px;
+  padding: 0 8.5px 1px 0.5px;
   overflow-y: auto;
   list-style: none;
   scrollbar-color: $signal transparent;
@@ -37,17 +41,10 @@
 }
 
 .steam,
-.youtube {
+.instagram {
   margin-top: tube-size(0.15rem);
-  font-size: tube-size(1.15rem);
-}
-
-.steam {
   color: $signal;
-}
-
-.youtube {
-  color: #ff5a5a;
+  font-size: tube-size(1.15rem);
 }
 
 .text {
@@ -82,8 +79,7 @@
 
 .frame,
 .image,
-.excerpt,
-.date {
+.excerpt {
   grid-column: 1 / -1;
 }
 
@@ -98,7 +94,9 @@
 }
 
 .image {
+  box-sizing: border-box;
   width: 100%;
+  border: 1px solid $signal;
   object-fit: cover;
   object-position: center;
 }

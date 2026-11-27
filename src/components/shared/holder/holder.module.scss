@@ -58,7 +58,7 @@ $holder-narrow: 15rem;
   flex-direction: column;
   justify-content: flex-start;
   box-sizing: border-box;
-  padding: tube-size(1.35rem) tube-size(0.9rem);
+  padding: tube-size(1.35rem) tube-size($screen-pad-x);
   overflow: hidden;
   background: $tube-screen;
   @include tube-panes;
